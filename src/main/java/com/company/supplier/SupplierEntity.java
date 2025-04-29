@@ -1,0 +1,32 @@
+package com.company.supplier;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.UUID;
+
+@Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "supplier")
+public class SupplierEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id", updatable = false, nullable = false)
+    private UUID id;
+
+    @Column(name = "full_name", nullable = false)
+    private String name;
+
+    @Column(name = "contact_info", nullable = false)
+    private String contactInfo;
+
+    @Column(name = "address", nullable = false)
+    private String address;
+
+
+
+}
