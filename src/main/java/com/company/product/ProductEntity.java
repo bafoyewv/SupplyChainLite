@@ -1,11 +1,15 @@
 package com.company.product;
 
+import com.company.inventory.InventoryEntity;
+import com.company.orderDetails.OrderDetailsEntity;
+import com.company.supplier.SupplierEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -31,8 +35,19 @@ public class ProductEntity {
     @Column(name = "stock_quantity", nullable = false)
     private Integer stockQuantity;
 
-    @Column(name = "supplier_id", nullable = false)
+
+    @OneToMany(mappedBy = "productEntity")
+    private List<OrderDetailsEntity> orderDetailsEntities;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "supplier_id")
+    private SupplierEntity supplierEntity;
+    @Column(name = "supplier_id", insertable = false, updatable = false, nullable = false)
     private UUID supplierId;
 
+
+    @OneToMany(mappedBy = "productEntity")
+    private List<InventoryEntity> inventoryEntities;
 
 }

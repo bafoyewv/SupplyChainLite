@@ -1,5 +1,6 @@
 package com.company.inventory;
 
+import com.company.product.ProductEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,6 +28,11 @@ public class InventoryEntity {
     @CreationTimestamp
     private LocalDateTime lastRestockDate;
 
-    @Column(name = "product_id",nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private ProductEntity productEntity;
+    @Column(name = "product_id", insertable = false, updatable = false, nullable = false)
     private UUID productId;
+
+
 }

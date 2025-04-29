@@ -1,10 +1,12 @@
 package com.company.supplier;
 
+import com.company.product.ProductEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -26,6 +28,9 @@ public class SupplierEntity {
 
     @Column(name = "address", nullable = false)
     private String address;
+
+    @OneToMany(mappedBy = "supplierEntity")
+    private List<ProductEntity> productEntities;
 
 
 
