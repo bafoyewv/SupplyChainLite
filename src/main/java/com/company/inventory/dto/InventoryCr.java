@@ -1,5 +1,5 @@
 package com.company.inventory.dto;
 
-public class ProductCr {
+public class InventoryCr {
     private Integer quantityInStock;
 }

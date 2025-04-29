@@ -6,7 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class ProductResp {
+public class InventoryResp {
     private UUID id;
     private Integer quantityInStock;
     private LocalDateTime lastRestockDate;
