@@ -27,8 +27,9 @@ public class InventoryEntity {
     @Column(name = "quantity_in_stock",nullable = false)
     private Integer quantityInStock;
 
-    @Column(name = "last_restock_date",nullable = false)
+
     @CreationTimestamp
+    @Column(name = "last_restock_date",nullable = false)
     private LocalDateTime lastRestockDate;
 
     @ManyToOne(fetch = FetchType.LAZY)

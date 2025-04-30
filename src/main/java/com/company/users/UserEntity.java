@@ -40,8 +40,9 @@ public class UserEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Column(name = "created_at")
+
     @CreationTimestamp
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")

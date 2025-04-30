@@ -25,8 +25,9 @@ public class OrdersEntity {
     @Column(name = "visibility")
     private Boolean visibility;
 
-    @Column(name = "order_date")
+
     @CreationTimestamp
+    @Column(name = "order_date")
     private LocalDateTime orderDate;
 
     @Column(name = "status")
