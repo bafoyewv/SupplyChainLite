@@ -22,6 +22,9 @@ public class OrderDetailsEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(name = "visibility")
+    private Boolean visibility;
+
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 

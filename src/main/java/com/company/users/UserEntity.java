@@ -24,6 +24,9 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(name = "visibility")
+    private Boolean visibility;
+
     @Column(name = "fullName", nullable = false)
     private String fullName;
 

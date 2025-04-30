@@ -21,6 +21,9 @@ public class InventoryEntity {
     @Column(name = "id",updatable = false, nullable = false)
     private UUID id;
 
+    @Column(name = "visibility")
+    private Boolean visibility;
+
     @Column(name = "quantity_in_stock",nullable = false)
     private Integer quantityInStock;
 

@@ -23,6 +23,9 @@ public class ProductEntity {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
+    @Column(name = "visibility")
+    private Boolean visibility;
+
     @Column(name = "title", nullable = false)
     private String name;
 

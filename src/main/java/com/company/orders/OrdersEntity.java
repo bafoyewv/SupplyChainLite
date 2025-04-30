@@ -22,6 +22,9 @@ public class OrdersEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(name = "visibility")
+    private Boolean visibility;
+
     @Column(name = "order_date")
     @CreationTimestamp
     private LocalDateTime orderDate;
