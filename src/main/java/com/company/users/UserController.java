@@ -1,12 +1,25 @@
 package com.company.users;
 
+import com.company.users.dto.UserCr;
+import com.company.users.dto.UserResp;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
 public class UserController {
+    private final UserService userService;
+
+    @PostMapping
+    public ResponseEntity<UserResp> create(@RequestBody UserCr userCr) {
+        return userService.create(userCr);
+    }
+
+
 }
