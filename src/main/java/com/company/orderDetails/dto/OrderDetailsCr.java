@@ -15,4 +15,6 @@ import java.util.UUID;
 public class OrderDetailsCr {
     private Integer quantity;
     private BigDecimal price;
+    private UUID orderId;
+    private UUID productId;
 }

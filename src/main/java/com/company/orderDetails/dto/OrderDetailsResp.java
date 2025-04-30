@@ -1,12 +1,11 @@
 package com.company.orderDetails.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Data
@@ -14,7 +13,9 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderDetailsResp {
-    private UUID orderDetailsId;
+    private UUID id;
     private Integer quantity;
-    private String price;
+    private BigDecimal price;
+    private UUID orderId;
+    private UUID productId;
 }

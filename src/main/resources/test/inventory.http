@@ -1,0 +1,26 @@
+### Create Inventory
+POST http://localhost:8080/api/v1/inventory
+Content-Type: application/json
+
+{
+  "quantityInStock": 100,
+  "productId": "7f1a163a-4843-4f16-84f6-cc1b84b3c223"
+}
+
+### Get Inventory by ID
+GET http://localhost:8080/api/v1/inventory/dc2f0ccd-2c24-4857-ac7f-2ec897583836
+
+### Get All Inventory
+GET http://localhost:8080/api/v1/inventory?page=0&size=10
+
+### Update Inventory
+PUT http://localhost:8080/api/v1/inventory/dc2f0ccd-2c24-4857-ac7f-2ec897583836
+Content-Type: application/json
+
+{
+  "quantityInStock": 150,
+  "productId": "7f1a163a-4843-4f16-84f6-cc1b84b3c223"
+}
+
+### Delete Inventory
+DELETE http://localhost:8080/api/v1/inventory/dc2f0ccd-2c24-4857-ac7f-2ec897583836

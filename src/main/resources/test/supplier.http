@@ -3,19 +3,19 @@ POST localhost:8080/api/v1/supply/add
 Content-Type: application/json
 
 {
-  "name": "Hoji",
-  "address": "Quyosh",
+  "name": "Bexruz",
+  "address": "Mars",
   "contact_info": "+998999999999"
 }
 
 ### GET BY ID
-GET localhost:8080/api/v1/supply/get-by-id/d09f0e0c-6c26-48b8-800c-f4d37a3a8b4d
+GET localhost:8080/api/v1/supply/get-by-id/9de06c73-dc35-4261-8843-9ba1ad3a5b5f
 
 ### GET ALL
 GET localhost:8080/api/v1/supply/get-all
 
 ### UPDATE
-PUT localhost:8080/api/v1/supply/update/3b48207a-b61b-4273-a24f-3e33d066eda8
+PUT localhost:8080/api/v1/supply/update/9de06c73-dc35-4261-8843-9ba1ad3a5b5f
 Content-Type: application/json
 
 {
@@ -25,4 +25,4 @@ Content-Type: application/json
 }
 
 ### DELETE
-DELETE localhost:8080/api/v1/supply/delete/59a7e60f-2b6b-4009-bc90-7406fa5331c2
+DELETE localhost:8080/api/v1/supply/delete/00675f4c-683d-41ca-8e6d-8033d6ec2f82

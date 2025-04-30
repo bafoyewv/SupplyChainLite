@@ -10,11 +10,12 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class OrdersResp {
-    private UUID orderId;
+    private UUID id;
     private LocalDateTime orderDate;
     private Status status;
+    private UUID userId;
 }

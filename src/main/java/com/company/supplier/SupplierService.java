@@ -6,6 +6,7 @@ import com.company.product.ProductEntity;
 import com.company.product.dto.ProductResp;
 import com.company.supplier.dto.SupplierCr;
 import com.company.supplier.dto.SupplierResp;
+import com.company.users.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,7 @@ public class SupplierService {
         SupplierEntity supplierEntity =SupplierEntity.builder()
                 .name(supplierCr.getName())
                 .contactInfo(supplierCr.getContact_info())
+                .visibility(true)
                 .address(supplierCr.getAddress())
                 .build();
 
@@ -72,14 +74,11 @@ public class SupplierService {
         return ResponseEntity.ok(toDTO(saved));
     }
 
-    public ResponseEntity<String> delete(UUID id) {
-        SupplierEntity supplierEntity = supplierRepository
-                .findByIdAndVisibilityTrue(id)
-                .orElseThrow(ItemNotFoundException::new);
-
+    public ResponseEntity<String> delete(UUID id){
+        SupplierEntity supplierEntity = getSuppliersById(id);
         supplierEntity.setVisibility(false);
         supplierRepository.save(supplierEntity);
-        return ResponseEntity.ok("Supplier was successfully deleted !");
+        return ResponseEntity.ok("Supplier Deleted Successfully");
     }
 
     private SupplierResp toDTO(SupplierEntity supplierEntity) {
@@ -89,5 +88,10 @@ public class SupplierService {
                 .contact_info(supplierEntity.getContactInfo())
                 .address(supplierEntity.getAddress())
                 .build();
+    }
+
+    private SupplierEntity getSuppliersById(UUID id) {
+        return supplierRepository.findByIdAndVisibilityTrue(id)
+                .orElseThrow(ItemNotFoundException::new);
     }
 }

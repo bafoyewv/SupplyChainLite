@@ -1,0 +1,30 @@
+### Create Order Details
+POST http://localhost:8080/api/v1/order-details
+Content-Type: application/json
+
+{
+  "quantity": 5,
+  "price": 99.99,
+  "orderId": "6ea9ae4f-b2c4-4781-8486-953854f51868",
+  "productId": "7f1a163a-4843-4f16-84f6-cc1b84b3c223"
+}
+
+### Get Order Details by ID
+GET http://localhost:8080/api/v1/order-details/8f6795d6-edbf-4694-9058-13882a9f7ddd
+
+### Get All Order Details
+GET http://localhost:8080/api/v1/order-details?page=0&size=10
+
+### Update Order Details
+PUT http://localhost:8080/api/v1/order-details/8f6795d6-edbf-4694-9058-13882a9f7ddd
+Content-Type: application/json
+
+{
+  "quantity": 10,
+  "price": 149.99,
+  "orderId": "8f6795d6-edbf-4694-9058-13882a9f7ddd",
+  "productId": "7f1a163a-4843-4f16-84f6-cc1b84b3c223"
+}
+
+### Delete Order Details
+DELETE http://localhost:8080/api/v1/order-details/8f6795d6-edbf-4694-9058-13882a9f7ddd
