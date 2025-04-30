@@ -1,0 +1,28 @@
+### CREATE SUPPLIER
+POST localhost:8080/api/v1/supply/add
+Content-Type: application/json
+
+{
+  "name": "Hoji",
+  "address": "Quyosh",
+  "contact_info": "+998999999999"
+}
+
+### GET BY ID
+GET localhost:8080/api/v1/supply/get-by-id/d09f0e0c-6c26-48b8-800c-f4d37a3a8b4d
+
+### GET ALL
+GET localhost:8080/api/v1/supply/get-all
+
+### UPDATE
+PUT localhost:8080/api/v1/supply/update/3b48207a-b61b-4273-a24f-3e33d066eda8
+Content-Type: application/json
+
+{
+"name": "Yoq",
+  "address": "No Address",
+  "contact_info": "no info"
+}
+
+### DELETE
+DELETE localhost:8080/api/v1/supply/delete/59a7e60f-2b6b-4009-bc90-7406fa5331c2
