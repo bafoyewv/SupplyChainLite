@@ -4,6 +4,7 @@ import com.company.orders.dto.OrdersCr;
 import com.company.orders.dto.OrdersResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,5 +42,14 @@ public class OrdersController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable UUID id) {
         return ordersService.delete(id);
+    }
+
+    @GetMapping("/get-orders-by-status/{status}")
+    public ResponseEntity<Page<OrdersResp>> getOrdersByStatus(
+            @PathVariable Status status,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ordersService.getOrdersByStatus(status, page, size);
     }
 } 

@@ -79,6 +79,33 @@ public class ProductService {
         return ResponseEntity.ok("Product Deleted Successfully");
     }
 
+    public ResponseEntity<PageImpl<ProductResp>> searchProducts(String name, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("name"));
+        List<ProductResp> list = productRepository.findByNameContainingIgnoreCaseAndVisibilityTrue(name, pageable)
+                .stream()
+                .map(this::toDTO)
+                .toList();
+        return ResponseEntity.ok(new PageImpl<>(list, pageable, list.size()));
+    }
+
+    public ResponseEntity<PageImpl<ProductResp>> getLowStockProducts(int threshold, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("stockQuantity"));
+        List<ProductResp> list = productRepository.findByStockQuantityLessThanEqualAndVisibilityTrue(threshold, pageable)
+                .stream()
+                .map(this::toDTO)
+                .toList();
+        return ResponseEntity.ok(new PageImpl<>(list, pageable, list.size()));
+    }
+
+    public ResponseEntity<PageImpl<ProductResp>> getProductsBySupplier(UUID supplierId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("name"));
+        List<ProductResp> list = productRepository.findBySupplierIdAndVisibilityTrue(supplierId, pageable)
+                .stream()
+                .map(this::toDTO)
+                .toList();
+        return ResponseEntity.ok(new PageImpl<>(list, pageable, list.size()));
+    }
+
     private ProductResp toDTO(ProductEntity productEntity) {
         return ProductResp.builder()
                 .id(productEntity.getId())

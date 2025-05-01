@@ -69,6 +69,15 @@ public class OrdersService {
         return ResponseEntity.ok("Order Deleted Successfully");
     }
 
+    public ResponseEntity<Page<OrdersResp>> getOrdersByStatus(Status status, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("orderDate"));
+        List<OrdersResp> list = ordersRepository.findAllByStatusAndVisibilityTrue(status, pageable)
+                .stream()
+                .map(this::toDTO)
+                .toList();
+        return ResponseEntity.ok(new PageImpl<>(list, pageable, list.size()));
+    }
+
     private OrdersResp toDTO(OrdersEntity ordersEntity) {
         return OrdersResp.builder()
                 .id(ordersEntity.getId())

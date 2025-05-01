@@ -3,10 +3,10 @@ POST http://localhost:8080/api/v1/product
 Content-Type: application/json
 
 {
-  "name": "Test Product",
+  "name": "Shampune",
   "price": 99.99,
   "description": "Test Product Description",
-  "stockQuantity": 100,
+  "stockQuantity": 8,
   "supplierId": "00675f4c-683d-41ca-8e6d-8033d6ec2f82"
 }
 
@@ -30,3 +30,16 @@ Content-Type: application/json
 
 ### Delete Product
 DELETE http://localhost:8080/api/v1/product/e6d919f8-612a-4062-a309-e7cf3f1b01b6
+
+### Get Product by Name
+GET http://localhost:8080/api/v1/product/search/
+
+### Search Products by Name
+GET http://localhost:8080/api/v1/product/search/Test Product?page=0&size=10
+
+### Get Low Stock Products
+GET http://localhost:8080/api/v1/product/get-low-stock-products?threshold=10&page=0&size=10
+
+
+### Get Products by Supplier ID
+GET http://localhost:8080/api/v1/product/get-products-by-supplier/00675f4c-683d-41ca-8e6d-8033d6ec2f82?page=0&size=10

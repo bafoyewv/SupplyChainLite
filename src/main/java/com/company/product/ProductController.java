@@ -4,6 +4,7 @@ import com.company.product.dto.ProductCr;
 import com.company.product.dto.ProductResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,5 +42,30 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable UUID id) {
         return productService.delete(id);
+    }
+
+    @GetMapping("/search/{name}")
+    public ResponseEntity<PageImpl<ProductResp>> searchByName(@PathVariable String name,
+                                                              @RequestParam(defaultValue = "0") int page,
+                                                              @RequestParam(defaultValue = "10") int size) {
+        return productService.searchProducts(name, page, size);
+    }
+
+    @GetMapping("/get-low-stock-products")
+    public ResponseEntity<PageImpl<ProductResp>> getLowStockProducts(
+            @RequestParam(defaultValue = "10") int threshold,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return productService.getLowStockProducts(threshold, page, size);
+    }
+
+    @GetMapping("/get-products-by-supplier/{supplierId}")
+    public ResponseEntity<PageImpl<ProductResp>> getProductsBySupplier(
+            @PathVariable UUID supplierId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return productService.getProductsBySupplier(supplierId, page, size);
     }
 }
