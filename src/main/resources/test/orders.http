@@ -5,8 +5,8 @@ Content-Type: application/json
 {
   "orderDate": "2024-03-01",
   "status": "PENDING",
-  "userId": "d8eee294-54b5-4b8f-ae39-76368a104a3c",
-  "productId": "7f1a163a-4843-4f16-84f6-cc1b84b3c223",
+  "userId": "b859a459-3720-4ece-9c77-418bf7ae84c5",
+  "productId": "751ca02a-8dd5-4f41-8413-b41ac4a431b6",
   "quantity": 2
 }
 

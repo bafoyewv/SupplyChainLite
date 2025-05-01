@@ -3,11 +3,11 @@ POST http://localhost:8080/api/v1/product
 Content-Type: application/json
 
 {
-  "name": "Shampune",
-  "price": 99.99,
-  "description": "Test Product Description",
-  "stockQuantity": 8,
-  "supplierId": "00675f4c-683d-41ca-8e6d-8033d6ec2f82"
+  "name": "Tlfoncha",
+  "price": 200,
+  "description": "o'zim 7 yil ishlatganman zo'r ishlaydi",
+  "stockQuantity": 1,
+  "supplierId": "cf9b11ad-0183-4195-8900-438ab9e86903"
 }
 
 ### Get Product by ID
