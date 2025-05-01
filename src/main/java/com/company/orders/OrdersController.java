@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @RestController
@@ -51,5 +52,15 @@ public class OrdersController {
             @RequestParam(defaultValue = "10") int size
     ) {
         return ordersService.getOrdersByStatus(status, page, size);
+    }
+
+    @GetMapping("/get-orders-by-date-range/{startDate}/{endDate}")
+    public ResponseEntity<Page<OrdersResp>> getOrdersByDateRange(
+            @PathVariable LocalDate startDate,
+            @PathVariable LocalDate endDate,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ordersService.getOrdersByDateRange(startDate, endDate, page, size);
     }
 } 

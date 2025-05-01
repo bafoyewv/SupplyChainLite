@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -15,7 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class OrdersResp {
     private UUID id;
-    private LocalDateTime orderDate;
+    private LocalDate orderDate;
     private Status status;
     private UUID userId;
 }

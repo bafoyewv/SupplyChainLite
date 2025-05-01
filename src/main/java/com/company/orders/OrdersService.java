@@ -11,6 +11,8 @@ import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -72,6 +74,15 @@ public class OrdersService {
     public ResponseEntity<Page<OrdersResp>> getOrdersByStatus(Status status, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("orderDate"));
         List<OrdersResp> list = ordersRepository.findAllByStatusAndVisibilityTrue(status, pageable)
+                .stream()
+                .map(this::toDTO)
+                .toList();
+        return ResponseEntity.ok(new PageImpl<>(list, pageable, list.size()));
+    }
+
+    public ResponseEntity<Page<OrdersResp>> getOrdersByDateRange(LocalDate startDate, LocalDate endDate, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("orderDate"));
+        List<OrdersResp> list = ordersRepository.findAllByOrderDateBetweenAndVisibilityTrue(startDate, endDate, pageable)
                 .stream()
                 .map(this::toDTO)
                 .toList();

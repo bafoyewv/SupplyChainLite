@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -27,10 +28,9 @@ public class OrdersEntity {
     @Column(name = "visibility")
     private Boolean visibility;
 
-
     @CreationTimestamp
     @Column(name = "order_date")
-    private LocalDateTime orderDate;
+    private LocalDate orderDate;
 
     @Column(name = "status")
     private Status status;
