@@ -35,194 +35,108 @@ const authenticatedFetch = async (url, options = {}) => {
 // Auth Context
 const AuthContext = React.createContext(null);
 
-function Login() {
-    const [formData, setFormData] = useState({
-        username: '',
-        password: ''
-    });
-    const [error, setError] = useState('');
+function Login({ onSwitch, onLogin, notification }) {
+    const [formData, setFormData] = useState({ username: '', password: '' });
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         try {
             const response = await fetch(`${API_BASE_URL}/auth/login`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
             });
-
-            if (!response.ok) {
-                throw new Error('Invalid credentials');
-            }
-
+            if (!response.ok) throw new Error('Login failed');
             const data = await response.json();
             localStorage.setItem('token', data.token);
             localStorage.setItem('user', JSON.stringify(data.user));
-            window.location.reload();
-        } catch (error) {
-            setError('Invalid username or password');
+            onLogin();
+        } catch (err) {
+            onLogin('Login yoki parol xato!');
+        } finally {
+            setLoading(false);
         }
     };
-
     return (
-        <div className="container">
-            <div className="row justify-content-center align-items-center min-vh-100">
-                <div className="col-md-6 col-lg-4">
-                    <div className="card shadow">
-                        <div className="card-body">
-                            <h3 className="text-center mb-4">Login</h3>
-                            {error && (
-                                <div className="alert alert-danger" role="alert">
-                                    {error}
-                                </div>
-                            )}
-                            <form onSubmit={handleSubmit}>
-                                <div className="mb-3">
-                                    <label className="form-label">Username</label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        value={formData.username}
-                                        onChange={(e) => setFormData({...formData, username: e.target.value})}
-                                        required
-                                    />
-                                </div>
-                                <div className="mb-3">
-                                    <label className="form-label">Password</label>
-                                    <input
-                                        type="password"
-                                        className="form-control"
-                                        value={formData.password}
-                                        onChange={(e) => setFormData({...formData, password: e.target.value})}
-                                        required
-                                    />
-                                </div>
-                                <button type="submit" className="btn btn-primary w-100">
-                                    Login
-                                </button>
-                                <div className="text-center mt-3">
-                                    <a href="#" onClick={() => setCurrentPage('register')} className="text-decoration-none">
-                                        Don't have an account? Register here
-                                    </a>
-                                </div>
-                            </form>
-                        </div>
+        <div className="container d-flex align-items-center justify-content-center min-vh-100">
+            <div className="card shadow p-4" style={{ minWidth: 350, maxWidth: 400, width: '100%' }}>
+                <h3 className="mb-4 text-center">Tizimga kirish</h3>
+                {notification && <div className="alert alert-danger">{notification}</div>}
+                <form onSubmit={handleSubmit} autoComplete="off">
+                    <div className="mb-3">
+                        <label className="form-label">Login</label>
+                        <input type="text" className="form-control" value={formData.username} onChange={e => setFormData({ ...formData, username: e.target.value })} required autoFocus />
                     </div>
+                    <div className="mb-3">
+                        <label className="form-label">Parol</label>
+                        <input type="password" className="form-control" value={formData.password} onChange={e => setFormData({ ...formData, password: e.target.value })} required />
+                    </div>
+                    <button type="submit" className="btn btn-primary w-100" disabled={loading}>{loading ? 'Kirish...' : 'Kirish'}</button>
+                </form>
+                <div className="text-center mt-3">
+                    <button className="btn btn-link p-0" onClick={onSwitch}>Ro‘yxatdan o‘tish</button>
                 </div>
             </div>
         </div>
     );
 }
 
-function Register() {
-    const [formData, setFormData] = useState({
-        username: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
-    });
-    const [error, setError] = useState('');
+function Register({ onSwitch, onRegister, notification }) {
+    const [formData, setFormData] = useState({ username: '', email: '', password: '', confirmPassword: '' });
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
         if (formData.password !== formData.confirmPassword) {
-            setError('Passwords do not match');
+            onRegister('Parollar mos emas!');
             return;
         }
-
+        setLoading(true);
         try {
             const response = await fetch(`${API_BASE_URL}/auth/register`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username: formData.username,
-                    email: formData.email,
-                    password: formData.password
-                })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: formData.username, email: formData.email, password: formData.password })
             });
-
-            if (!response.ok) {
-                throw new Error('Registration failed');
-            }
-
+            if (!response.ok) throw new Error('Register failed');
             const data = await response.json();
             localStorage.setItem('token', data.token);
             localStorage.setItem('user', JSON.stringify(data.user));
-            window.location.reload();
-        } catch (error) {
-            setError('Registration failed. Please try again.');
+            onRegister();
+        } catch (err) {
+            onRegister('Ro‘yxatdan o‘tishda xatolik!');
+        } finally {
+            setLoading(false);
         }
     };
-
     return (
-        <div className="container">
-            <div className="row justify-content-center align-items-center min-vh-100">
-                <div className="col-md-6 col-lg-4">
-                    <div className="card shadow">
-                        <div className="card-body">
-                            <h3 className="text-center mb-4">Register</h3>
-                            {error && (
-                                <div className="alert alert-danger" role="alert">
-                                    {error}
-                                </div>
-                            )}
-                            <form onSubmit={handleSubmit}>
-                                <div className="mb-3">
-                                    <label className="form-label">Username</label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        value={formData.username}
-                                        onChange={(e) => setFormData({...formData, username: e.target.value})}
-                                        required
-                                    />
-                                </div>
-                                <div className="mb-3">
-                                    <label className="form-label">Email</label>
-                                    <input
-                                        type="email"
-                                        className="form-control"
-                                        value={formData.email}
-                                        onChange={(e) => setFormData({...formData, email: e.target.value})}
-                                        required
-                                    />
-                                </div>
-                                <div className="mb-3">
-                                    <label className="form-label">Password</label>
-                                    <input
-                                        type="password"
-                                        className="form-control"
-                                        value={formData.password}
-                                        onChange={(e) => setFormData({...formData, password: e.target.value})}
-                                        required
-                                    />
-                                </div>
-                                <div className="mb-3">
-                                    <label className="form-label">Confirm Password</label>
-                                    <input
-                                        type="password"
-                                        className="form-control"
-                                        value={formData.confirmPassword}
-                                        onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
-                                        required
-                                    />
-                                </div>
-                                <button type="submit" className="btn btn-primary w-100">
-                                    Register
-                                </button>
-                                <div className="text-center mt-3">
-                                    <a href="#" onClick={() => setCurrentPage('login')} className="text-decoration-none">
-                                        Already have an account? Login here
-                                    </a>
-                                </div>
-                            </form>
-                        </div>
+        <div className="container d-flex align-items-center justify-content-center min-vh-100">
+            <div className="card shadow p-4" style={{ minWidth: 350, maxWidth: 400, width: '100%' }}>
+                <h3 className="mb-4 text-center">Ro‘yxatdan o‘tish</h3>
+                {notification && <div className="alert alert-danger">{notification}</div>}
+                <form onSubmit={handleSubmit} autoComplete="off">
+                    <div className="mb-3">
+                        <label className="form-label">Login</label>
+                        <input type="text" className="form-control" value={formData.username} onChange={e => setFormData({ ...formData, username: e.target.value })} required autoFocus />
                     </div>
+                    <div className="mb-3">
+                        <label className="form-label">Email</label>
+                        <input type="email" className="form-control" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} required />
+                    </div>
+                    <div className="mb-3">
+                        <label className="form-label">Parol</label>
+                        <input type="password" className="form-control" value={formData.password} onChange={e => setFormData({ ...formData, password: e.target.value })} required />
+                    </div>
+                    <div className="mb-3">
+                        <label className="form-label">Parolni tasdiqlang</label>
+                        <input type="password" className="form-control" value={formData.confirmPassword} onChange={e => setFormData({ ...formData, confirmPassword: e.target.value })} required />
+                    </div>
+                    <button type="submit" className="btn btn-primary w-100" disabled={loading}>{loading ? 'Yuborilmoqda...' : 'Ro‘yxatdan o‘tish'}</button>
+                </form>
+                <div className="text-center mt-3">
+                    <button className="btn btn-link p-0" onClick={onSwitch}>Kirish</button>
                 </div>
             </div>
         </div>
@@ -230,7 +144,7 @@ function Register() {
 }
 
 // Components
-function Dashboard() {
+function Dashboard({ showNotification }) {
     const [stats, setStats] = useState({
         totalProducts: 0,
         totalSuppliers: 0,
@@ -244,7 +158,7 @@ function Dashboard() {
             .then(response => response.json())
             .then(data => setStats(data))
             .catch(error => showNotification('Error fetching dashboard data', 'danger'));
-    }, []);
+    }, [showNotification]);
 
     return (
         <div className="row">
@@ -413,7 +327,7 @@ function ProductModal({ show, onClose, product, onSubmit }) {
     );
 }
 
-function Products() {
+function Products({ showNotification }) {
     const [products, setProducts] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [currentProduct, setCurrentProduct] = useState(null);
@@ -519,7 +433,7 @@ function Products() {
     );
 }
 
-function Inventory() {
+function Inventory({ showNotification }) {
     const [lowStockProducts, setLowStockProducts] = useState([]);
 
     useEffect(() => {
@@ -527,7 +441,7 @@ function Inventory() {
             .then(response => response.json())
             .then(data => setLowStockProducts(data))
             .catch(error => showNotification('Error fetching low stock products', 'danger'));
-    }, []);
+    }, [showNotification]);
 
     return (
         <div className="card shadow mb-4">
@@ -568,7 +482,7 @@ function Inventory() {
     );
 }
 
-function Suppliers() {
+function Suppliers({ showNotification }) {
     const [suppliers, setSuppliers] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [currentSupplier, setCurrentSupplier] = useState(null);
@@ -740,7 +654,7 @@ function Suppliers() {
     );
 }
 
-function Orders() {
+function Orders({ showNotification }) {
     const [orders, setOrders] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [currentOrder, setCurrentOrder] = useState(null);
@@ -926,7 +840,7 @@ function Orders() {
     );
 }
 
-function Users() {
+function Users({ showNotification }) {
     const [users, setUsers] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
@@ -1114,122 +1028,140 @@ function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [user, setUser] = useState(null);
 
-    useEffect(() => {
-        // Check if user is authenticated
-        const token = localStorage.getItem('token');
-        const storedUser = localStorage.getItem('user');
-        
-        if (token && storedUser) {
-            setIsAuthenticated(true);
-            setUser(JSON.parse(storedUser));
-            setCurrentPage('dashboard');
-        }
-    }, []);
-
-    const showNotification = (message, type) => {
+    // Global notification function
+    const showNotification = (message, type = 'danger') => {
         setNotification({ message, type });
         setTimeout(() => setNotification(null), 3000);
     };
 
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const storedUser = localStorage.getItem('user');
+        if (token && storedUser) {
+            setIsAuthenticated(true);
+            setUser(JSON.parse(storedUser));
+            setCurrentPage('dashboard');
+        } else {
+            setIsAuthenticated(false);
+            setUser(null);
+        }
+    }, []);
+
+    // Handle login success or error
+    const handleLogin = (error) => {
+        if (!error) {
+            setIsAuthenticated(true);
+            setUser(JSON.parse(localStorage.getItem('user')));
+            setCurrentPage('dashboard');
+            showNotification('Login successful!', 'success');
+        } else {
+            showNotification(error);
+        }
+    };
+
+    // Handle register success or error
+    const handleRegister = (error) => {
+        if (!error) {
+            setIsAuthenticated(true);
+            setUser(JSON.parse(localStorage.getItem('user')));
+            setCurrentPage('dashboard');
+            showNotification('Registration successful!', 'success');
+        } else {
+            showNotification(error);
+        }
+    };
+
+    // Handle logout
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         setIsAuthenticated(false);
         setUser(null);
         setCurrentPage('login');
+        showNotification('Logged out successfully', 'success');
     };
 
-    const renderPage = () => {
-        if (!isAuthenticated) {
-            return currentPage === 'login' ? <Login /> : <Register />;
-        }
-
-        switch (currentPage) {
-            case 'dashboard':
-                return <Dashboard />;
-            case 'products':
-                return <Products />;
-            case 'inventory':
-                return <Inventory />;
-            case 'suppliers':
-                return <Suppliers />;
-            case 'orders':
-                return <Orders />;
-            case 'users':
-                return <Users />;
-            default:
-                return <Dashboard />;
-        }
+    // SPA page switcher for sidebar
+    const handlePageSwitch = (page) => {
+        setCurrentPage(page);
+        setNotification(null);
     };
 
-    // If not authenticated, show only login/register page
+    // Render auth pages if not authenticated
     if (!isAuthenticated) {
-        return renderPage();
+        if (currentPage === 'register') {
+            return <Register onSwitch={() => { setCurrentPage('login'); setNotification(null); }} onRegister={handleRegister} notification={notification?.message} />;
+        }
+        return <Login onSwitch={() => { setCurrentPage('register'); setNotification(null); }} onLogin={handleLogin} notification={notification?.message} />;
     }
 
     // Main app layout for authenticated users
     return (
         <div className="d-flex">
             {/* Sidebar */}
-            <div className="sidebar" style={{ width: '250px' }}>
+            <div className="sidebar bg-dark" style={{ width: '250px', minHeight: '100vh' }}>
                 <div className="p-3">
                     <h4 className="text-white">Supply Chain</h4>
                 </div>
                 <nav className="nav flex-column">
-                    <a className={`nav-link ${currentPage === 'dashboard' ? 'active' : ''}`} 
-                       onClick={() => setCurrentPage('dashboard')}>
-                        <i className="bi bi-speedometer2 me-2"></i> Dashboard
+                    <a className={`nav-link text-white ${currentPage === 'dashboard' ? 'active bg-primary' : ''}`} 
+                       href="#" onClick={() => handlePageSwitch('dashboard')}>
+                       <i className="bi bi-speedometer2 me-2"></i> Dashboard
                     </a>
-                    <a className={`nav-link ${currentPage === 'products' ? 'active' : ''}`} 
-                       onClick={() => setCurrentPage('products')}>
-                        <i className="bi bi-box-seam me-2"></i> Products
+                    <a className={`nav-link text-white ${currentPage === 'products' ? 'active bg-primary' : ''}`} 
+                       href="#" onClick={() => handlePageSwitch('products')}>
+                       <i className="bi bi-box-seam me-2"></i> Products
                     </a>
-                    <a className={`nav-link ${currentPage === 'inventory' ? 'active' : ''}`} 
-                       onClick={() => setCurrentPage('inventory')}>
-                        <i className="bi bi-archive me-2"></i> Inventory
+                    <a className={`nav-link text-white ${currentPage === 'inventory' ? 'active bg-primary' : ''}`} 
+                       href="#" onClick={() => handlePageSwitch('inventory')}>
+                       <i className="bi bi-archive me-2"></i> Inventory
                     </a>
-                    <a className={`nav-link ${currentPage === 'suppliers' ? 'active' : ''}`} 
-                       onClick={() => setCurrentPage('suppliers')}>
-                        <i className="bi bi-truck me-2"></i> Suppliers
+                    <a className={`nav-link text-white ${currentPage === 'suppliers' ? 'active bg-primary' : ''}`} 
+                       href="#" onClick={() => handlePageSwitch('suppliers')}>
+                       <i className="bi bi-truck me-2"></i> Suppliers
                     </a>
-                    <a className={`nav-link ${currentPage === 'orders' ? 'active' : ''}`} 
-                       onClick={() => setCurrentPage('orders')}>
-                        <i className="bi bi-cart me-2"></i> Orders
+                    <a className={`nav-link text-white ${currentPage === 'orders' ? 'active bg-primary' : ''}`} 
+                       href="#" onClick={() => handlePageSwitch('orders')}>
+                       <i className="bi bi-cart me-2"></i> Orders
                     </a>
-                    <a className={`nav-link ${currentPage === 'users' ? 'active' : ''}`} 
-                       onClick={() => setCurrentPage('users')}>
-                        <i className="bi bi-people me-2"></i> Users
+                    <a className={`nav-link text-white ${currentPage === 'users' ? 'active bg-primary' : ''}`} 
+                       href="#" onClick={() => handlePageSwitch('users')}>
+                       <i className="bi bi-people me-2"></i> Users
                     </a>
                 </nav>
             </div>
-
             {/* Main Content */}
             <div className="flex-grow-1">
                 <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-                    <h1 className="h3 mb-0 text-gray-800">Supply Chain Management</h1>
-                    <ul className="navbar-nav ml-auto">
-                        <li className="nav-item dropdown">
-                            <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                <i className="bi bi-person-circle me-2"></i>
-                                {user?.username}
-                            </a>
-                            <div className="dropdown-menu dropdown-menu-end">
-                                <a className="dropdown-item" href="#" onClick={handleLogout}>
-                                    <i className="bi bi-box-arrow-right me-2"></i>
-                                    Logout
+                    <div className="container-fluid">
+                        <h1 className="h3 mb-0 text-gray-800">Supply Chain Management</h1>
+                        <ul className="navbar-nav ml-auto">
+                            <li className="nav-item dropdown">
+                                <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i className="bi bi-person-circle me-2"></i>
+                                    {user?.username}
                                 </a>
-                            </div>
-                        </li>
-                    </ul>
+                                <div className="dropdown-menu dropdown-menu-end">
+                                    <a className="dropdown-item" href="#" onClick={handleLogout}>
+                                        <i className="bi bi-box-arrow-right me-2"></i> Logout
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
                 </nav>
-
                 <div className="container-fluid">
                     {notification && (
                         <div className={`alert alert-${notification.type}`} role="alert">
                             {notification.message}
                         </div>
                     )}
-                    {renderPage()}
+                    {currentPage === 'dashboard' && <Dashboard showNotification={showNotification} />}
+                    {currentPage === 'products' && <Products showNotification={showNotification} />}
+                    {currentPage === 'inventory' && <Inventory showNotification={showNotification} />}
+                    {currentPage === 'suppliers' && <Suppliers showNotification={showNotification} />}
+                    {currentPage === 'orders' && <Orders showNotification={showNotification} />}
+                    {currentPage === 'users' && <Users showNotification={showNotification} />}
                 </div>
             </div>
         </div>
