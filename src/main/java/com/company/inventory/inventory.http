@@ -1,0 +1,35 @@
+### Create Inventory
+POST http://localhost:8080/api/v1/inventory
+Content-Type: application/json
+
+{
+  "productId": "123e4567-e89b-12d3-a456-426614174000",
+  "quantityInStock": 100
+}
+
+### Get Inventory by ID
+GET http://localhost:8080/api/v1/inventory/123e4567-e89b-12d3-a456-426614174000
+
+### Get All Inventories
+GET http://localhost:8080/api/v1/inventory?page=0&size=10
+
+### Update Inventory
+PUT http://localhost:8080/api/v1/inventory/123e4567-e89b-12d3-a456-426614174000
+Content-Type: application/json
+
+{
+  "productId": "123e4567-e89b-12d3-a456-426614174000",
+  "quantityInStock": 150
+}
+
+### Delete Inventory
+DELETE http://localhost:8080/api/v1/inventory/123e4567-e89b-12d3-a456-426614174000
+
+### Get Inventory Alerts (Low Stock)
+GET http://localhost:8080/api/v1/inventory/alerts?threshold=10&page=0&size=10
+
+### Get Inventory Movement History
+GET http://localhost:8080/api/v1/inventory/movement-history/123e4567-e89b-12d3-a456-426614174000?page=0&size=10
+
+### Update Inventory Quantity
+PUT http://localhost:8080/api/v1/inventory/update-quantity/123e4567-e89b-12d3-a456-426614174000?newQuantity=50&movementType=IN 

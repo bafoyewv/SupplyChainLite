@@ -1,4 +1,4 @@
-package com.company.orderDetails;
+package com.company.orderdetails;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -8,11 +8,11 @@
         <version>3.3.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>SupplyChainLite</groupId>
-    <artifactId>SupplyChainLite</artifactId>
+    <groupId>com.company</groupId>
+    <artifactId>supply-chain-lite</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>spring-security-hello-world</name>
-    <description>SupplyChainLite</description>
+    <name>Supply Chain Lite</name>
+    <description>Supply Chain Management System</description>
     <url/>
     <licenses>
         <license/>
@@ -30,7 +30,6 @@
         <java.version>17</java.version>
     </properties>
     <dependencies>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>

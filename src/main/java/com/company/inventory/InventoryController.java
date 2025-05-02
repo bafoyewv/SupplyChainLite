@@ -1,6 +1,7 @@
 package com.company.inventory;
 
 import com.company.inventory.dto.InventoryCr;
+import com.company.inventory.dto.InventoryMovementHistoryResp;
 import com.company.inventory.dto.InventoryResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -41,5 +42,32 @@ public class InventoryController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable UUID id) {
         return inventoryService.delete(id);
+    }
+
+    @GetMapping("/alerts")
+    public ResponseEntity<Page<InventoryResp>> getInventoryAlerts(
+            @RequestParam(defaultValue = "10") int threshold,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return inventoryService.getInventoryAlerts(threshold, page, size);
+    }
+
+    @GetMapping("/movement-history/{inventoryId}")
+    public ResponseEntity<Page<InventoryMovementHistoryResp>> getInventoryMovementHistory(
+            @PathVariable UUID inventoryId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return inventoryService.getInventoryMovementHistory(inventoryId, page, size);
+    }
+
+    @PutMapping("/update-quantity/{id}")
+    public ResponseEntity<InventoryResp> updateInventoryQuantity(
+            @PathVariable UUID id,
+            @RequestParam int newQuantity,
+            @RequestParam String movementType
+    ) {
+        return inventoryService.updateInventoryQuantity(id, newQuantity, movementType);
     }
 }

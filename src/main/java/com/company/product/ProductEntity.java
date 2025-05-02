@@ -1,7 +1,7 @@
 package com.company.product;
 
-import com.company.inventory.InventoryEntity;
-import com.company.orderDetails.OrderDetailsEntity;
+import com.company.inventory.entity.InventoryEntity;
+import com.company.orderdetails.OrderDetailsEntity;
 import com.company.supplier.SupplierEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

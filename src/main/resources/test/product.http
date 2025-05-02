@@ -7,7 +7,7 @@ Content-Type: application/json
   "price": 200,
   "description": "o'zim 7 yil ishlatganman zo'r ishlaydi",
   "stockQuantity": 1,
-  "supplierId": "cf9b11ad-0183-4195-8900-438ab9e86903"
+  "supplierId": "1e1d2591-8914-4976-a608-123dbdfac2df"
 }
 
 ### Get Product by ID

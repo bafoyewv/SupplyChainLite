@@ -1,7 +1,7 @@
-package com.company.orderDetails;
+package com.company.orderdetails;
 
-import com.company.orderDetails.dto.OrderDetailsCr;
-import com.company.orderDetails.dto.OrderDetailsResp;
+import com.company.orderdetails.dto.OrderDetailsCr;
+import com.company.orderdetails.dto.OrderDetailsResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;

@@ -3,7 +3,7 @@ POST http://localhost:8080/api/v1/order
 Content-Type: application/json
 
 {
-  "orderDate": "2024-03-01",
+  "orderDate": "2024-03-31",
   "status": "PENDING",
   "userId": "b859a459-3720-4ece-9c77-418bf7ae84c5",
   "productId": "751ca02a-8dd5-4f41-8413-b41ac4a431b6",

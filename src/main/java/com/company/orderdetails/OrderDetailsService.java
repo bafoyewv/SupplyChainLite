@@ -1,9 +1,9 @@
-package com.company.orderDetails;
+package com.company.orderdetails;
 
 import com.company.exception.AppBadRequestException;
 import com.company.exception.ItemNotFoundException;
-import com.company.orderDetails.dto.OrderDetailsCr;
-import com.company.orderDetails.dto.OrderDetailsResp;
+import com.company.orderdetails.dto.OrderDetailsCr;
+import com.company.orderdetails.dto.OrderDetailsResp;
 import com.company.orders.OrdersEntity;
 import com.company.orders.OrdersRepository;
 import com.company.product.ProductEntity;

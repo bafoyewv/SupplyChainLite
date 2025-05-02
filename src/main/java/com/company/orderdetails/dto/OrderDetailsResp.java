@@ -1,4 +1,4 @@
-package com.company.orderDetails.dto;
+package com.company.orderdetails.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +12,8 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderDetailsCr {
+public class OrderDetailsResp {
+    private UUID id;
     private Integer quantity;
     private BigDecimal price;
     private UUID orderId;
