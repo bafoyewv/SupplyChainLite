@@ -4,9 +4,12 @@ import com.company.exception.AppBadRequestException;
 import com.company.exception.ItemNotFoundException;
 import com.company.users.dto.UserCr;
 import com.company.users.dto.UserResp;
+import com.company.users.dto.LoginDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -42,9 +45,33 @@ public class UserService {
 
     }
 
-    public ResponseEntity<UserResp> getById(UUID id) {
-        UserEntity userEntity = getUserEntityById(id);
+    public ResponseEntity<UserResp> getProfile() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        
+        UserEntity userEntity = userRepository.findByEmailAndVisibilityTrue(email)
+                .orElseThrow(ItemNotFoundException::new);
+                
         return ResponseEntity.ok(toDTO(userEntity));
+    }
+
+    public ResponseEntity<UserResp> updateProfile(UserCr userCr) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        
+        UserEntity userEntity = userRepository.findByEmailAndVisibilityTrue(email)
+                .orElseThrow(ItemNotFoundException::new);
+
+        Optional<UserEntity> optionalUser = userRepository.findByEmailAndVisibilityTrue(userCr.getEmail());
+        if (optionalUser.isPresent() && !optionalUser.get().getId().equals(userEntity.getId())) {
+            throw new AppBadRequestException("Email allaqachon mavjud!");
+        }
+
+        userEntity.setFullName(userCr.getFullName());
+        userEntity.setEmail(userCr.getEmail());
+        userEntity.setPassword(userCr.getPassword());
+        UserEntity saved = userRepository.save(userEntity);
+        return ResponseEntity.ok(toDTO(saved));
     }
 
     public ResponseEntity<Page<UserResp>> getAll(int page, int size) {
@@ -60,21 +87,9 @@ public class UserService {
         );
     }
 
-    public ResponseEntity<UserResp> update(UUID id, UserCr userCr) {
+    public ResponseEntity<UserResp> getById(UUID id) {
         UserEntity userEntity = getUserEntityById(id);
-
-        Optional<UserEntity> optionalUser = userRepository
-                .findByEmailAndVisibilityTrue(userCr.getEmail());
-
-        if (optionalUser.isPresent() && !optionalUser.get().getId().equals(id)) {
-            throw new AppBadRequestException("User Already Exists!!!");
-        }
-
-        userEntity.setFullName(userCr.getFullName());
-        userEntity.setEmail(userCr.getEmail());
-        userEntity.setPassword(userCr.getPassword());
-        UserEntity saved = userRepository.save(userEntity);
-        return ResponseEntity.ok(toDTO(saved));
+        return ResponseEntity.ok(toDTO(userEntity));
     }
 
     public ResponseEntity<String> delete(UUID id) {
@@ -82,6 +97,17 @@ public class UserService {
         userEntity.setVisibility(false);
         userRepository.save(userEntity);
         return ResponseEntity.ok("User Deleted Successfully");
+    }
+
+    public ResponseEntity<UserResp> login(LoginDTO loginDTO) {
+        Optional<UserEntity> optionalUser = userRepository
+                .findByEmailAndPasswordAndVisibilityTrue(loginDTO.getEmail(), loginDTO.getPassword());
+        
+        if (optionalUser.isEmpty()) {
+            throw new AppBadRequestException("Email yoki parol noto'g'ri!");
+        }
+
+        return ResponseEntity.ok(toDTO(optionalUser.get()));
     }
 
     private UserResp toDTO(UserEntity userEntity) {
