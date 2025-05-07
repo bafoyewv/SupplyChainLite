@@ -14,7 +14,6 @@
     <artifactId>supply-chain-lite</artifactId>
     <version>1.0.0</version>
     <name>Supply Chain Management</name>
-    <description>Supply Chain Management System</description>
     
     <properties>
         <java.version>17</java.version>
@@ -22,7 +21,7 @@
     </properties>
     
     <dependencies>
-        <!-- Spring Boot Starters -->
+        <!-- Spring Boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
