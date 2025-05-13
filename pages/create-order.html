@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Order | Supply Chain Management</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/forms.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2>SupplyChainLite</h2>
+      </div>
+      <ul class="sidebar-menu">
+        <li>
+          <a href="../index.html">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="products.html">
+            <i class="fas fa-box"></i>
+            <span>Products</span>
+          </a>
+        </li>
+        <li>
+          <a href="inventory.html">
+            <i class="fas fa-warehouse"></i>
+            <span>Inventory</span>
+          </a>
+        </li>
+        <li>
+          <a href="suppliers.html">
+            <i class="fas fa-truck"></i>
+            <span>Suppliers</span>
+          </a>
+        </li>
+        <li class="active">
+          <a href="orders.html">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Orders</span>
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="header">
+        <h1>Create New Order</h1>
+        <div class="header-actions">
+          <button class="btn btn-primary" onclick="window.location.href='orders.html'">
+            <i class="fas fa-arrow-left"></i> Back to Orders
+          </button>
+        </div>
+      </div>
+
+      <!-- Create Order Form -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Order Information</h2>
+        </div>
+        <div class="card-body">
+          <form id="create-order-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="customer-name">Customer Name</label>
+                <input type="text" id="customer-name" name="customerName" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label for="customer-email">Customer Email</label>
+                <input type="email" id="customer-email" name="customerEmail" class="form-control" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="customer-phone">Customer Phone</label>
+                <input type="tel" id="customer-phone" name="customerPhone" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label for="order-date">Order Date</label>
+                <input type="date" id="order-date" name="orderDate" class="form-control" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="shipping-address">Shipping Address</label>
+              <textarea id="shipping-address" name="shippingAddress" class="form-control" rows="3" required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Order Items</label>
+              <div class="order-items-container">
+                <div class="order-item">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="product-1">Product</label>
+                      <select id="product-1" name="products[]" class="form-control product-select" required>
+                        <option value="">Select Product</option>
+                        <!-- Products will be loaded here -->
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="quantity-1">Quantity</label>
+                      <input type="number" id="quantity-1" name="quantities[]" class="form-control quantity-input" min="1" value="1" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="price-1">Unit Price</label>
+                      <input type="text" id="price-1" class="form-control price-display" readonly>
+                    </div>
+                    <div class="form-group">
+                      <label for="subtotal-1">Subtotal</label>
+                      <input type="text" id="subtotal-1" class="form-control subtotal-display" readonly>
+                    </div>
+                    <div class="form-group item-actions">
+                      <button type="button" class="btn btn-danger remove-item-btn" disabled>
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn btn-primary" id="add-item-btn">
+                <i class="fas fa-plus"></i> Add Item
+              </button>
+            </div>
+
+            <div class="order-summary">
+              <div class="summary-row">
+                <span>Subtotal:</span>
+                <span id="order-subtotal">$0.00</span>
+              </div>
+              <div class="summary-row">
+                <span>Tax (10%):</span>
+                <span id="order-tax">$0.00</span>
+              </div>
+              <div class="summary-row">
+                <span>Shipping:</span>
+                <span id="order-shipping">$10.00</span>
+              </div>
+              <div class="summary-row total">
+                <span>Total:</span>
+                <span id="order-total">$10.00</span>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="btn btn-danger" onclick="window.location.href='orders.html'">Cancel</button>
+              <button type="submit" class="btn btn-primary">Create Order</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/utils.js"></script>
+  <script src="../js/orders.js"></script>
+</body>
+</html>

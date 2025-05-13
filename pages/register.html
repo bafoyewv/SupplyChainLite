@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Supply Chain Management</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/forms.css">
+</head>
+<body>
+    <div class="container">
+        <header class="auth-header">
+            <h1>Supply Chain Management</h1>
+            <h2>Create an Account</h2>
+        </header>
+        
+        <main>
+            <!-- Success Message -->
+            <div id="success-message" class="alert success-alert" style="display: none;">
+                Account created successfully! Redirecting to login...
+            </div>
+            
+            <!-- Error Message -->
+            <div id="error-message" class="alert error-alert" style="display: none;"></div>
+            
+            <!-- Registration Form -->
+            <div class="form-container">
+                <form id="register-form">
+                    <div class="form-group">
+                        <label for="username">Username *</label>
+                        <input type="text" id="username" name="username" required>
+                        <span class="validation-message" id="username-validation"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" required>
+                        <span class="validation-message" id="email-validation"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password *</label>
+                        <input type="password" id="password" name="password" required>
+                        <span class="validation-message" id="password-validation"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm Password *</label>
+                        <input type="password" id="confirm-password" name="confirm-password" required>
+                        <span class="validation-message" id="confirm-password-validation"></span>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <a href="../index.html" class="cancel-btn">Cancel</a>
+                        <button type="submit" class="submit-btn">Register</button>
+                    </div>
+                    
+                    <div class="form-footer">
+                        Already have an account? <a href="login.html">Login here</a>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Loading Indicator -->
+            <div id="loading" class="loading-indicator" style="display: none;">
+                <div class="spinner"></div>
+                <p>Creating your account...</p>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="../js/auth.js"></script>
+</body>
+</html>
