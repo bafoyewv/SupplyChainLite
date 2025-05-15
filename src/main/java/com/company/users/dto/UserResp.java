@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -17,7 +18,7 @@ public class UserResp {
     private UUID id;
     private String fullName;
     private String email;
-    private LocalDate creationDate;
+    private LocalDateTime creationDate = LocalDateTime.now();
     private Role role;
 
 }

@@ -3,9 +3,9 @@ POST http://localhost:8080/api/v1/auth/register
 Content-Type: application/json
 
 {
-  "fullName": "Test User",
-  "email": "test@example.com",
-  "password": "password123"
+  "fullName": "Bexruz Hasanovv",
+  "email": "hasanov@gmail.com",
+  "password": "baxruz2009"
 }
 
 ### Login
@@ -13,23 +13,23 @@ POST http://localhost:8080/api/v1/auth/login
 Content-Type: application/json
 
 {
-  "email": "test@example.com",
-  "password": "password123"
+  "email": "asliddinov@gmail.com",
+  "password": "qwertyuiop"
 }
 
 ### Get User Profile
 GET http://localhost:8080/api/v1/user/profile
-Authorization: Bearer {{token}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhc2xpZGRpbm92QGdtYWlsLmNvbSIsImlhdCI6MTc0NzMwNzQ0NSwiZXhwIjoxNzQ3MzkzODQ1fQ.FKk4NjPk8Pw4E8MghBjrzfxDFrW8mMtTR_gvbLh03-c
 
 ### Update User Profile
 PUT http://localhost:8080/api/v1/user/update
-Authorization: Bearer {{token}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhc2xpZGRpbm92QGdtYWlsLmNvbSIsImlhdCI6MTc0NzMwNzQ0NSwiZXhwIjoxNzQ3MzkzODQ1fQ.FKk4NjPk8Pw4E8MghBjrzfxDFrW8mMtTR_gvbLh03-c
 Content-Type: application/json
 
 {
-  "fullName": "Updated Name",
-  "email": "updated@example.com",
-  "password": "newpassword123"
+  "fullName": "ZohirBEK Asliddinov",
+  "email": "zohirbek@example.com",
+  "password": "NEWPASSWORD123"
 }
 
 ### Get All Users (Admin only)

@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -85,6 +86,26 @@ public class UserService {
         return ResponseEntity.ok(
                 new PageImpl<>(list, pageable, list.size())
         );
+    }
+
+    public ResponseEntity<UserResp>  updateRoleToAdmin(UserCr userCr, String username) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        UserEntity userEntity = userRepository.findByEmailAndVisibilityTrue(email)
+                .orElseThrow(ItemNotFoundException::new);
+
+        Optional<UserEntity> optionalUser = userRepository.findByEmailAndVisibilityTrue(userCr.getEmail());
+
+        if (optionalUser.isPresent() && optionalUser.get().getUsername().equals(username)) {
+
+            userEntity.setRole(Role.ADMIN);
+            UserEntity saved = userRepository.save(userEntity);
+            return ResponseEntity.ok(toDTO(saved));
+        }
+        return AppBadRequestException;
+
+
     }
 
     public ResponseEntity<UserResp> getById(UUID id) {
