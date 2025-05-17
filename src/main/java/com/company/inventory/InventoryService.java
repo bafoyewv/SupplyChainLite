@@ -127,7 +127,7 @@ public class InventoryService {
         return ResponseEntity.ok(toDTO(saved));
     }
 
-    public ResponseEntity<Page<InventoryResp>> getLowStockItems(int threshold, int page, int size) {
+    public ResponseEntity<Page<InventoryResp>> getLowStockItems(int threshold) {
         Pageable pageable = PageRequest.of(0, 10, Sort.by("quantityInStock"));
         List<InventoryResp> list = inventoryRepository.findByQuantityInStockLessThanEqualAndVisibilityTrue(threshold, pageable)
                 .stream()

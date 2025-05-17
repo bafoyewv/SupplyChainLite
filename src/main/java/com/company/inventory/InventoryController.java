@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.service.annotation.PutExchange;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -35,7 +37,10 @@ public class InventoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<InventoryResp> update(@PathVariable UUID id, @RequestBody InventoryCr inventoryCr) {
+    public ResponseEntity<InventoryResp> update(
+            @PathVariable UUID id,
+            @RequestBody InventoryCr inventoryCr
+    ) {
         return inventoryService.update(id, inventoryCr);
     }
 
@@ -53,7 +58,7 @@ public class InventoryController {
         return inventoryService.getInventoryAlerts(threshold, page, size);
     }
 
-    @GetMapping("/movement-history/{inventoryId}")
+    @GetMapping("/{inventoryId}/movement-history")
     public ResponseEntity<Page<InventoryMovementHistoryResp>> getInventoryMovementHistory(
             @PathVariable UUID inventoryId,
             @RequestParam(defaultValue = "0") int page,
@@ -62,7 +67,7 @@ public class InventoryController {
         return inventoryService.getInventoryMovementHistory(inventoryId, page, size);
     }
 
-    @PutMapping("/update-quantity/{id}")
+    @PutMapping("/{id}/quantity")
     public ResponseEntity<InventoryResp> updateInventoryQuantity(
             @PathVariable UUID id,
             @RequestParam int newQuantity,
@@ -71,21 +76,16 @@ public class InventoryController {
         return inventoryService.updateInventoryQuantity(id, newQuantity, movementType);
     }
 
-    @GetMapping("/getLowStockItems")
-    public ResponseEntity<Page<InventoryResp>> getLowStockItems(
-            @PathVariable int threshold,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ){
-        return inventoryService.getLowStockItems(threshold, page, size);
+
+    @GetMapping("/low-stock")
+    public ResponseEntity<Page<InventoryResp>> getLowStockItems(@RequestParam(defaultValue = "10") int threshold) {
+        return inventoryService.getLowStockItems(threshold);
     }
 
-    @GetMapping("/getInvetoryByCategory")
-    public ResponseEntity<Page<InventoryResp>> getInvetoryByCategory(
-            @RequestParam String category
-    ){
+    @GetMapping("/by-category/{category}")
+    public ResponseEntity<Page<InventoryResp>> getInventoryByCategory(@PathVariable String category) {
         return inventoryService.getInvetoryByCategory(category);
     }
-
+    
 
 }

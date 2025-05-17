@@ -2,19 +2,25 @@ package com.company.orderdetails;
 
 import com.company.exception.AppBadRequestException;
 import com.company.exception.ItemNotFoundException;
+import com.company.inventory.InventoryService;
 import com.company.orderdetails.dto.OrderDetailsCr;
 import com.company.orderdetails.dto.OrderDetailsResp;
+import com.company.orderdetails.dto.OrderSummaryDTO;
 import com.company.orders.OrdersEntity;
 import com.company.orders.OrdersRepository;
+import com.company.orders.Status;
 import com.company.product.ProductEntity;
 import com.company.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.UUID;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +28,7 @@ public class OrderDetailsService {
     private final OrderDetailsRepository orderDetailsRepository;
     private final OrdersRepository ordersRepository;
     private final ProductRepository productRepository;
+    private final InventoryService inventoryService;
 
     public ResponseEntity<OrderDetailsResp> create(OrderDetailsCr orderDetailsCr) {
         OrdersEntity ordersEntity = ordersRepository.findById(orderDetailsCr.getOrderId())
@@ -76,6 +83,131 @@ public class OrderDetailsService {
         orderDetailsEntity.setVisibility(false);
         orderDetailsRepository.save(orderDetailsEntity);
         return ResponseEntity.ok("Order Details Deleted Successfully");
+    }
+
+    /**
+     * Get all pending orders that have not been fulfilled yet
+     * @return List of orders with PENDING status
+     */
+    public ResponseEntity<List<OrdersEntity>> getPendingOrders() {
+        List<Status> pendingStatuses = Arrays.asList(Status.PENDING, Status.IN_PROGRESS);
+        List<OrdersEntity> pendingOrders = ordersRepository.findByStatusesAndVisibilityTrue(pendingStatuses);
+        return ResponseEntity.ok(pendingOrders);
+    }
+
+    /**
+     * Update the status of an order
+     * @param orderId The order ID
+     * @param status The new status
+     * @return The updated order
+     */
+    @Transactional
+    public ResponseEntity<OrdersEntity> updateOrderStatus(UUID orderId, String status) {
+        OrdersEntity order = ordersRepository.findByIdAndVisibilityTrue(orderId)
+                .orElseThrow(() -> new AppBadRequestException("Order not found"));
+        
+        try {
+            Status newStatus = Status.valueOf(status.toUpperCase());
+            order.setStatus(newStatus);
+            OrdersEntity savedOrder = ordersRepository.save(order);
+            return ResponseEntity.ok(savedOrder);
+        } catch (IllegalArgumentException e) {
+            throw new AppBadRequestException("Invalid status: " + status);
+        }
+    }
+
+    /**
+     * Cancel an order and release reserved inventory
+     * @param orderId The order ID to cancel
+     * @return Message indicating success
+     */
+    @Transactional
+    public ResponseEntity<String> cancelOrder(UUID orderId) {
+        OrdersEntity order = ordersRepository.findByIdAndVisibilityTrue(orderId)
+                .orElseThrow(() -> new AppBadRequestException("Order not found"));
+        
+        // Check if order can be canceled
+        if (order.getStatus() == Status.DELIVERED || order.getStatus() == Status.COMPLETED) {
+            throw new AppBadRequestException("Cannot cancel a delivered or completed order");
+        }
+        
+        // Get order details to release inventory
+        List<OrderDetailsEntity> orderDetails = orderDetailsRepository.findByOrderIdAndVisibilityTrue(orderId);
+        
+        // Release inventory for each item
+        for (OrderDetailsEntity detail : orderDetails) {
+            inventoryService.releaseReservedInventory(detail.getProductId(), detail.getQuantity());
+        }
+        
+        // Update order status
+        order.setStatus(Status.CANCELED);
+        ordersRepository.save(order);
+        
+        return ResponseEntity.ok("Order canceled successfully and inventory released");
+    }
+
+    /**
+     * Get all orders for a specific customer
+     * @param customerId The customer ID
+     * @return List of orders for the customer
+     */
+    public ResponseEntity<List<OrdersEntity>> getOrdersByCustomerId(UUID customerId) {
+        List<OrdersEntity> customerOrders = ordersRepository.findByUserIdAndVisibilityTrue(customerId);
+        return ResponseEntity.ok(customerOrders);
+    }
+
+    /**
+     * Calculate the total price of an order
+     * @param orderId The order ID
+     * @return The total price of the order
+     */
+    public ResponseEntity<BigDecimal> calculateTotalOrderPrice(UUID orderId) {
+        // Check if order exists
+        ordersRepository.findByIdAndVisibilityTrue(orderId)
+                .orElseThrow(() -> new AppBadRequestException("Order not found"));
+        
+        BigDecimal totalPrice = orderDetailsRepository.calculateTotalOrderPrice(orderId);
+        return ResponseEntity.ok(totalPrice != null ? totalPrice : BigDecimal.ZERO);
+    }
+
+    /**
+     * Get order summary within a date range
+     * @param fromDate Start date
+     * @param toDate End date
+     * @return Summary of orders within the date range
+     */
+    public ResponseEntity<OrderSummaryDTO> getOrderSummaryByDateRange(LocalDate fromDate, LocalDate toDate) {
+        if (fromDate.isAfter(toDate)) {
+            throw new AppBadRequestException("From date must be before to date");
+        }
+        
+        List<OrderDetailsEntity> orderDetails = orderDetailsRepository.findByDateRangeAndVisibilityTrue(fromDate, toDate);
+        
+        // Calculate total orders
+        Set<UUID> uniqueOrderIds = orderDetails.stream()
+                .map(OrderDetailsEntity::getOrderId)
+                .collect(Collectors.toSet());
+        
+        // Calculate total revenue
+        BigDecimal totalRevenue = orderDetails.stream()
+                .map(detail -> detail.getPrice().multiply(BigDecimal.valueOf(detail.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        
+        // Calculate total items sold
+        int totalItemsSold = orderDetails.stream()
+                .mapToInt(OrderDetailsEntity::getQuantity)
+                .sum();
+        
+        // Create summary
+        OrderSummaryDTO summary = OrderSummaryDTO.builder()
+                .fromDate(fromDate)
+                .toDate(toDate)
+                .totalOrders(uniqueOrderIds.size())
+                .totalRevenue(totalRevenue)
+                .totalItemsSold(totalItemsSold)
+                .build();
+        
+        return ResponseEntity.ok(summary);
     }
 
     private OrderDetailsResp toDTO(OrderDetailsEntity orderDetailsEntity) {
