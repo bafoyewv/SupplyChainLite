@@ -127,6 +127,24 @@ public class InventoryService {
         return ResponseEntity.ok(toDTO(saved));
     }
 
+    public ResponseEntity<Page<InventoryResp>> getLowStockItems(int threshold, int page, int size) {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("quantityInStock"));
+        List<InventoryResp> list = inventoryRepository.findByQuantityInStockLessThanEqualAndVisibilityTrue(threshold, pageable)
+                .stream()
+                .map(this::toDTO)
+                .toList();
+        return ResponseEntity.ok(new PageImpl<>(list, pageable, list.size()));
+    }
+
+    public ResponseEntity<Page<InventoryResp>> getInvetoryByCategory(String category){
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("quantityInStock"));
+        List<InventoryResp> list = inventoryRepository.findByProductEntityCategoryAndVisibilityTrue(category, pageable)
+                .stream()
+                .map(this::toDTO)
+                .toList();
+        return ResponseEntity.ok(new PageImpl<>(list, pageable, list.size()));
+    }
+
     private InventoryResp toDTO(InventoryEntity inventoryEntity) {
         return InventoryResp.builder()
                 .id(inventoryEntity.getId())

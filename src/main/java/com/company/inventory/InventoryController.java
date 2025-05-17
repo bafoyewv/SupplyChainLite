@@ -70,4 +70,22 @@ public class InventoryController {
     ) {
         return inventoryService.updateInventoryQuantity(id, newQuantity, movementType);
     }
+
+    @GetMapping("/getLowStockItems")
+    public ResponseEntity<Page<InventoryResp>> getLowStockItems(
+            @PathVariable int threshold,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        return inventoryService.getLowStockItems(threshold, page, size);
+    }
+
+    @GetMapping("/getInvetoryByCategory")
+    public ResponseEntity<Page<InventoryResp>> getInvetoryByCategory(
+            @RequestParam String category
+    ){
+        return inventoryService.getInvetoryByCategory(category);
+    }
+
+
 }

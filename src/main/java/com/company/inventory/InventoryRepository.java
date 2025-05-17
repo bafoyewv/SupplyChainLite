@@ -15,4 +15,6 @@ public interface InventoryRepository extends JpaRepository<InventoryEntity, UUID
     Page<InventoryEntity> findByQuantityInStockLessThanEqualAndVisibilityTrue(int threshold, Pageable pageable);
     
     Page<InventoryEntity> findAllByVisibilityTrue(Pageable pageable);
+
+    Page<InventoryEntity> findByProductEntityCategoryAndVisibilityTrue(String category, Pageable pageable);
 }

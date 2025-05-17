@@ -62,6 +62,36 @@ public class AuthenticationService {
                 .build();
     }
 
+    public AuthenticationResponse refreshToken(String refreshToken) {
+        var username = jwtUtil.extractUsername(refreshToken);
+        var userEntity = userRepository.findByEmailAndVisibilityTrue(username)
+                .orElseThrow(() -> new AppBadRequestException("User topilmadi!"));
+                
+        var jwtToken = jwtUtil.generateToken(userEntity);
+        return AuthenticationResponse.builder()
+                .token(jwtToken)
+                .user(toDTO(userEntity))
+                .build();
+    }
+
+    public AuthenticationResponse changePassword(String email, String oldPassword, String newPassword) {
+        var userEntity = userRepository.findByEmailAndVisibilityTrue(email)
+                .orElseThrow(() -> new AppBadRequestException("User topilmadi!"));
+
+        if (!passwordEncoder.matches(oldPassword, userEntity.getPassword())) {
+            throw new AppBadRequestException("Eski parol noto'g'ri!");
+        }
+
+        userEntity.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(userEntity);
+
+        var jwtToken = jwtUtil.generateToken(userEntity);
+        return AuthenticationResponse.builder()
+                .token(jwtToken)
+                .user(toDTO(userEntity))
+                .build();
+    }
+
     private UserResp toDTO(UserEntity user) {
         return UserResp.builder()
                 .id(user.getId())

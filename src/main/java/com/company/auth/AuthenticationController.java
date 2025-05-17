@@ -23,4 +23,14 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> login(@RequestBody LoginDTO request) {
         return ResponseEntity.ok(authenticationService.login(request));
     }
+
+    @PostMapping("/refreshToken")
+    public ResponseEntity<AuthenticationResponse> refreshToken(@RequestBody String refreshToken) {
+        return ResponseEntity.ok(authenticationService.refreshToken(refreshToken));
+    }
+
+    @PostMapping("/changePass")
+    public ResponseEntity<AuthenticationResponse> changePass(@RequestBody String email ,@RequestBody String oldPass, @RequestBody String newPass) {
+        return ResponseEntity.ok(authenticationService.changePassword(email, oldPass, newPass));
+    }
 } 
