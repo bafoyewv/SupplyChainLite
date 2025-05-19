@@ -121,30 +121,7 @@ public class OrderDetailsService {
      * @param orderId The order ID to cancel
      * @return Message indicating success
      */
-    @Transactional
-    public ResponseEntity<String> cancelOrder(UUID orderId) {
-        OrdersEntity order = ordersRepository.findByIdAndVisibilityTrue(orderId)
-                .orElseThrow(() -> new AppBadRequestException("Order not found"));
-        
-        // Check if order can be canceled
-        if (order.getStatus() == Status.DELIVERED || order.getStatus() == Status.COMPLETED) {
-            throw new AppBadRequestException("Cannot cancel a delivered or completed order");
-        }
-        
-        // Get order details to release inventory
-        List<OrderDetailsEntity> orderDetails = orderDetailsRepository.findByOrderIdAndVisibilityTrue(orderId);
-        
-        // Release inventory for each item
-        for (OrderDetailsEntity detail : orderDetails) {
-            inventoryService.releaseReservedInventory(detail.getProductId(), detail.getQuantity());
-        }
-        
-        // Update order status
-        order.setStatus(Status.CANCELED);
-        ordersRepository.save(order);
-        
-        return ResponseEntity.ok("Order canceled successfully and inventory released");
-    }
+
 
     /**
      * Get all orders for a specific customer

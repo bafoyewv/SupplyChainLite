@@ -36,6 +36,7 @@ public class ProductService {
                 .description(productCr.getDescription())
                 .stockQuantity(productCr.getStockQuantity())
                 .supplierEntity(supplierEntity)
+                .category(productCr.getCategory())
                 .visibility(true)
                 .build();
 
@@ -67,6 +68,7 @@ public class ProductService {
         productEntity.setDescription(productCr.getDescription());
         productEntity.setStockQuantity(productCr.getStockQuantity());
         productEntity.setSupplierEntity(supplierEntity);
+        productEntity.setCategory(productCr.getCategory());
 
         ProductEntity saved = productRepository.save(productEntity);
         return ResponseEntity.ok(toDTO(saved));
@@ -114,6 +116,7 @@ public class ProductService {
                 .description(productEntity.getDescription())
                 .stockQuantity(productEntity.getStockQuantity())
                 .supplierId(productEntity.getSupplierId())
+                .category(productEntity.getCategory())
                 .build();
     }
 

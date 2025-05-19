@@ -18,4 +18,5 @@ public class ProductCr {
     private String description;
     private Integer stockQuantity;
     private UUID supplierId;
+    private String category;
 }

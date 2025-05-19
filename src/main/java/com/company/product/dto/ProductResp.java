@@ -19,4 +19,5 @@ public class ProductResp {
     private String description;
     private Integer stockQuantity;
     private UUID supplierId;
+    private String category;
 }

@@ -98,14 +98,13 @@ public class UserService {
         Optional<UserEntity> optionalUser = userRepository.findByEmailAndVisibilityTrue(userCr.getEmail());
 
         if (optionalUser.isPresent() && optionalUser.get().getUsername().equals(username)) {
+            throw new AppBadRequestException("User Already Exists!!!");
 
-            userEntity.setRole(Role.ADMIN);
-            UserEntity saved = userRepository.save(userEntity);
-            return ResponseEntity.ok(toDTO(saved));
         }
-        return AppBadRequestException;
 
-
+        userEntity.setRole(Role.ADMIN);
+        UserEntity saved = userRepository.save(userEntity);
+        return ResponseEntity.ok(toDTO(saved));
     }
 
     public ResponseEntity<UserResp> getById(UUID id) {

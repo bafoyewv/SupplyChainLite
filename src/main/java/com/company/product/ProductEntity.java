@@ -40,10 +40,11 @@ public class ProductEntity {
     @Column(name = "stock_quantity", nullable = false)
     private Integer stockQuantity;
 
+    @Column(name = "category")
+    private String category;
 
     @OneToMany(mappedBy = "productEntity")
     private List<OrderDetailsEntity> orderDetailsEntities;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_id")
@@ -51,8 +52,6 @@ public class ProductEntity {
     @Column(name = "supplier_id", insertable = false, updatable = false, nullable = false)
     private UUID supplierId;
 
-
     @OneToMany(mappedBy = "productEntity")
     private List<InventoryEntity> inventoryEntities;
-
 }

@@ -74,10 +74,7 @@ public class OrderDetailsController {
     /**
      * Cancel an order
      */
-    @PostMapping("/orders/{orderId}/cancel")
-    public ResponseEntity<String> cancelOrder(@PathVariable UUID orderId) {
-        return orderDetailsService.cancelOrder(orderId);
-    }
+    
     
     /**
      * Get all orders for a specific customer
