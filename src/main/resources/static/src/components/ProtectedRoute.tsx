@@ -2,17 +2,22 @@
 import React, { useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { Permission } from '@/utils/permissions';
+import { usePermission } from '@/hooks/usePermission';
 
 type ProtectedRouteProps = {
   children: React.ReactNode;
   requiredRoles?: string[];
+  requiredPermissions?: Permission[];
 };
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
   children, 
-  requiredRoles = [] 
+  requiredRoles = [],
+  requiredPermissions = []
 }) => {
   const { isAuthenticated, isLoading, user } = useAuth();
+  const { canAll } = usePermission();
   const location = useLocation();
   
   useEffect(() => {
@@ -20,9 +25,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
       isAuthenticated, 
       isLoading, 
       user, 
-      path: location.pathname
+      path: location.pathname,
+      requiredRoles,
+      requiredPermissions
     });
-  }, [isAuthenticated, isLoading, user, location.pathname]);
+  }, [isAuthenticated, isLoading, user, location.pathname, requiredRoles, requiredPermissions]);
 
   if (isLoading) {
     return (
@@ -40,6 +47,12 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   // Check if user has required role (if specified)
   if (requiredRoles.length > 0 && user && !requiredRoles.includes(user.role)) {
     console.log("User doesn't have required role, redirecting to unauthorized");
+    return <Navigate to="/unauthorized" replace />;
+  }
+
+  // Check if user has required permissions (if specified)
+  if (requiredPermissions.length > 0 && !canAll(requiredPermissions)) {
+    console.log("User doesn't have required permissions, redirecting to unauthorized");
     return <Navigate to="/unauthorized" replace />;
   }
 

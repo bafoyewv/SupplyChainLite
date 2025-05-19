@@ -1,7 +1,7 @@
-
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { usePermission } from '@/hooks/usePermission';
 import { Button } from "@/components/ui/button";
 import { 
   BarChart, 
@@ -12,7 +12,8 @@ import {
   Settings, 
   LogOut, 
   Menu,
-  User
+  User,
+  Database
 } from 'lucide-react';
 
 interface SidebarItemProps {
@@ -39,6 +40,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ icon, text, to, active, onCli
 const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { pathname } = useLocation();
   const { user, logout } = useAuth();
+  const { can } = usePermission();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -48,17 +50,54 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   };
 
   const navItems = [
-    { icon: <BarChart size={20} />, text: 'Dashboard', to: '/dashboard' },
-    { icon: <Package size={20} />, text: 'Products', to: '/products' },
-    { icon: <Box size={20} />, text: 'Inventory', to: '/inventory' },
-    { icon: <ShoppingCart size={20} />, text: 'Orders', to: '/orders' },
-    { icon: <Users size={20} />, text: 'Suppliers', to: '/suppliers' },
+    { 
+      icon: <BarChart size={20} />, 
+      text: 'Dashboard', 
+      to: '/dashboard',
+      permission: 'dashboard:view' 
+    },
+    { 
+      icon: <Package size={20} />, 
+      text: 'Products', 
+      to: '/products',
+      permission: 'product:create' 
+    },
+    { 
+      icon: <Box size={20} />, 
+      text: 'Inventory', 
+      to: '/inventory',
+      permission: 'inventory:view' 
+    },
+    { 
+      icon: <ShoppingCart size={20} />, 
+      text: 'Orders', 
+      to: '/orders',
+      permission: 'order:view' 
+    },
+    { 
+      icon: <Users size={20} />, 
+      text: 'Suppliers', 
+      to: '/suppliers',
+      permission: 'supplier:create'
+    },
+    {
+      icon: <Users size={20} />, 
+      text: 'Users', 
+      to: '/users',
+      permission: 'user:manage'
+    },
+    {
+      icon: <Settings size={20} />, 
+      text: 'Settings', 
+      to: '/settings',
+      permission: 'admin'
+    }
   ];
 
-  // Only show Users section for admins
-  if (user?.role === 'ADMIN') {
-    navItems.push({ icon: <Users size={20} />, text: 'Users', to: '/users' });
-  }
+  // Filter navigation items based on user permissions
+  const authorizedNavItems = navItems.filter(item => 
+    can(item.permission as any)
+  );
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
@@ -78,7 +117,7 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
         {/* Navigation */}
         <nav className="flex-1 space-y-1 px-3 py-4">
-          {navItems.map((item) => (
+          {authorizedNavItems.map((item) => (
             <SidebarItem
               key={item.to}
               icon={item.icon}
@@ -139,7 +178,7 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
           <div className="flex items-center gap-4">
             <span className="hidden md:block">
-              Welcome, {user?.username || 'User'}
+              Welcome, {user?.username || 'User'} ({user?.role})
             </span>
           </div>
         </header>

@@ -16,9 +16,13 @@ import Products from "./pages/Products";
 import Inventory from "./pages/Inventory";
 import Orders from "./pages/Orders";
 import Suppliers from "./pages/Suppliers";
+import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
 import Unauthorized from "./pages/Unauthorized";
 import NotFound from "./pages/NotFound";
+import Users from "./pages/Users";
+import OrderProducts from "./pages/OrderProducts";
+import Payment from "./pages/Payment";
 
 // Initialize axios with default settings
 import './services/api';
@@ -47,7 +51,7 @@ const App = () => (
             
             {/* Protected routes with AppLayout */}
             <Route path="/dashboard" element={
-              <ProtectedRoute>
+              <ProtectedRoute requiredPermissions={['dashboard:view']}>
                 <AppLayout>
                   <Dashboard />
                 </AppLayout>
@@ -55,7 +59,7 @@ const App = () => (
             } />
             
             <Route path="/products" element={
-              <ProtectedRoute>
+              <ProtectedRoute requiredPermissions={['product:create', 'product:edit']}>
                 <AppLayout>
                   <Products />
                 </AppLayout>
@@ -63,7 +67,7 @@ const App = () => (
             } />
 
             <Route path="/inventory" element={
-              <ProtectedRoute>
+              <ProtectedRoute requiredPermissions={['inventory:view']}>
                 <AppLayout>
                   <Inventory />
                 </AppLayout>
@@ -71,7 +75,7 @@ const App = () => (
             } />
 
             <Route path="/orders" element={
-              <ProtectedRoute>
+              <ProtectedRoute requiredPermissions={['order:view']}>
                 <AppLayout>
                   <Orders />
                 </AppLayout>
@@ -79,7 +83,7 @@ const App = () => (
             } />
 
             <Route path="/suppliers" element={
-              <ProtectedRoute>
+              <ProtectedRoute requiredPermissions={['supplier:create', 'supplier:edit']}>
                 <AppLayout>
                   <Suppliers />
                 </AppLayout>
@@ -87,17 +91,42 @@ const App = () => (
             } />
 
             <Route path="/users" element={
-              <ProtectedRoute requiredRoles={["ADMIN"]}>
+              <ProtectedRoute requiredPermissions={['user:manage']}>
                 <AppLayout>
-                  <Dashboard />
+                  <Users />
+                </AppLayout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/settings" element={
+              <ProtectedRoute requiredPermissions={['admin']}>
+                <AppLayout>
+                  <Settings />
                 </AppLayout>
               </ProtectedRoute>
             } />
 
             <Route path="/profile" element={
-              <ProtectedRoute>
+              <ProtectedRoute requiredPermissions={['profile:view']}>
                 <AppLayout>
                   <Profile />
+                </AppLayout>
+              </ProtectedRoute>
+            } />
+            
+            {/* New routes for order products and payment */}
+            <Route path="/order-products" element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <OrderProducts />
+                </AppLayout>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/payment" element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <Payment />
                 </AppLayout>
               </ProtectedRoute>
             } />

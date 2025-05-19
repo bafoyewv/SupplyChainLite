@@ -1,6 +1,18 @@
 
 import axios from 'axios';
 import { toast } from 'sonner';
+import { configureDatabaseConnection } from './databaseService';
+
+// Configure the database connection
+export const initializeBackendServices = (config = {}) => {
+  const dbConnection = configureDatabaseConnection({
+    apiUrl: '/api/v1',
+    ...config
+  });
+  
+  console.log('Backend services initialized:', dbConnection);
+  return dbConnection;
+};
 
 // Base API instance
 const api = axios.create({

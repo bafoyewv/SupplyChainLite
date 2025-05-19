@@ -2,12 +2,13 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'sonner';
+import { UserRole } from '@/utils/permissions';
 
 type User = {
   id: number;
   username: string;
   email: string;
-  role: string;
+  role: UserRole;
 };
 
 type AuthContextType = {
@@ -17,7 +18,7 @@ type AuthContextType = {
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  register: (username: string, email: string, password: string) => Promise<void>;
+  register: (username: string, email: string, password: string, role?: UserRole) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -60,12 +61,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // This is a mock implementation - replace with actual API call when backend is ready
       console.log("Attempting login with:", email, password);
       
+      // Determine role based on email pattern (for demonstration)
+      let role: UserRole = 'USER';
+      if (email.includes('admin')) {
+        role = 'ADMIN';
+      } else if (email.includes('supplier')) {
+        role = 'SUPPLIER';
+      }
+      
       // Simulate successful login with mock data
       const mockUser = {
         id: 1,
         username: email.split('@')[0],
         email: email,
-        role: email.includes('admin') ? 'ADMIN' : 'USER'
+        role: role
       };
       
       const mockToken = "mock-jwt-token-" + Date.now();
@@ -81,7 +90,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       axios.defaults.headers.common['Authorization'] = `Bearer ${mockToken}`;
       
       console.log("Login successful, user set:", mockUser);
-      toast.success('Successfully logged in');
+      toast.success(`Successfully logged in as ${role}`);
       
       return Promise.resolve();
     } catch (error) {
@@ -93,13 +102,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const register = async (username: string, email: string, password: string) => {
+  const register = async (username: string, email: string, password: string, role: UserRole = 'USER') => {
     try {
       setIsLoading(true);
       // In a real app, you would connect to your backend
       // For demo, we'll simulate a successful registration
-      console.log("Registration attempted with:", username, email);
-      toast.success('Successfully registered. You can now log in.');
+      console.log("Registration attempted with:", username, email, role);
+      toast.success(`Successfully registered as ${role}. You can now log in.`);
       return Promise.resolve();
     } catch (error) {
       console.error('Registration error:', error);
