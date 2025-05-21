@@ -1,21 +1,24 @@
-import axios from 'axios';
+import apiClient from '../lib/api-client';
 import { RegisterRequest } from '../types/auth';
-
-const API_URL = '/api/v1/auth';
 
 export const authApi = {
   register: async (data: RegisterRequest) => {
-    const response = await axios.post(`${API_URL}/register`, data);
+    const response = await apiClient.post('/auth/register', data);
     return response.data;
   },
 
   verify: async (data: { email: string; code: string }) => {
-    const response = await axios.post(`${API_URL}/verify`, data);
+    const response = await apiClient.post('/auth/verify', data);
     return response.data;
   },
 
   login: async (data: { email: string; password: string }) => {
-    const response = await axios.post(`${API_URL}/login`, data);
+    const response = await apiClient.post('/auth/login', data);
+    return response.data;
+  },
+
+  getProfile: async () => {
+    const response = await apiClient.get('/user/profile');
     return response.data;
   }
 };

@@ -4,6 +4,5 @@ public enum Role {
     USER,
     ADMIN,
     SUPPLIER,
-    STORE_OWNER,
-    STAFF
+    STORE_OWNER
 }

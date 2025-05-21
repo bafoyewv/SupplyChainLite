@@ -3,9 +3,9 @@ POST localhost:8080/api/v1/auth/register
 Content-Type: application/json
 
 {
-  "fullName": "Zohir",
-  "email": "whyasliddinoff@gmail.com",
-  "password": "123456"
+  "fullName": "Yahyo",
+  "email": "yahyobafoyev@gmail.com",
+  "password": "1234567890"
 }
 
 ### verify
@@ -13,8 +13,8 @@ POST localhost:8080/api/v1/auth/verify
 Content-Type: application/json
 
 {
-  "email": "whyasliddinoff@gmail.com",
-    "code": "142035"
+  "email": "yahyobafoyev@gmail.com",
+    "code": "684301"
 }
 
 ### Login
