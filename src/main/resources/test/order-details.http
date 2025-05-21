@@ -5,7 +5,7 @@ Content-Type: application/json
 {
   "quantity": 5,
   "price": 99.99,
-  "orderId": "6ea9ae4f-b2c4-4781-8486-953854f51868",
+  "orderId": "",
   "productId": "7f1a163a-4843-4f16-84f6-cc1b84b3c223"
 }
 

@@ -1,35 +1,41 @@
 ### Create Inventory
 POST http://localhost:8080/api/v1/inventory
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJhc2xpZGRpbm93dkBnbWFpbC5jb20iLCJpYXQiOjE3NDc4MDE0NTcsImV4cCI6MTc0Nzg4Nzg1N30.JO79ZdO5wEeNU7bjDKDqTEqB6ELySj_sYp-OLZlXGRw
 Content-Type: application/json
 
 {
-  "quantityInStock": 100,
-  "productId": "3c43e3bd-a809-4f5b-91ff-358512464de7"
+  "quantityInStock": 2,
+  "productId": "8e22942b-7770-4da4-88ff-968563fd60af"
 }
 
 ### Get Inventory by ID
-GET http://localhost:8080/api/v1/inventory/dc2f0ccd-2c24-4857-ac7f-2ec897583836
+GET http://localhost:8080/api/v1/inventory/b4e006a2-442d-46b7-817a-accf29caad87
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJhc2xpZGRpbm93dkBnbWFpbC5jb20iLCJpYXQiOjE3NDc4MDE0NTcsImV4cCI6MTc0Nzg4Nzg1N30.JO79ZdO5wEeNU7bjDKDqTEqB6ELySj_sYp-OLZlXGRw
 
 ### Get All Inventory
 GET http://localhost:8080/api/v1/inventory?page=0&size=10
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJhc2xpZGRpbm93dkBnbWFpbC5jb20iLCJpYXQiOjE3NDc4MDE0NTcsImV4cCI6MTc0Nzg4Nzg1N30.JO79ZdO5wEeNU7bjDKDqTEqB6ELySj_sYp-OLZlXGRw
 
 ### Update Inventory
-PUT http://localhost:8080/api/v1/inventory/dc2f0ccd-2c24-4857-ac7f-2ec897583836
+PUT http://localhost:8080/api/v1/inventory/b4e006a2-442d-46b7-817a-accf29caad87
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJhc2xpZGRpbm93dkBnbWFpbC5jb20iLCJpYXQiOjE3NDc4MDE0NTcsImV4cCI6MTc0Nzg4Nzg1N30.JO79ZdO5wEeNU7bjDKDqTEqB6ELySj_sYp-OLZlXGRw
 Content-Type: application/json
 
 {
   "quantityInStock": 150,
-  "productId": "7f1a163a-4843-4f16-84f6-cc1b84b3c223"
+  "productId": "8e22942b-7770-4da4-88ff-968563fd60af"
 }
 
 ### Delete Inventory
-DELETE http://localhost:8080/api/v1/inventory/dc2f0ccd-2c24-4857-ac7f-2ec897583836
+DELETE http://localhost:8080/api/v1/inventory/b4e006a2-442d-46b7-817a-accf29caad87
 
 ### Get Inventory Alerts (Low Stock)
 GET http://localhost:8080/api/v1/inventory/alerts?threshold=10&page=0&size=10
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJhc2xpZGRpbm93dkBnbWFpbC5jb20iLCJpYXQiOjE3NDc4MDE0NTcsImV4cCI6MTc0Nzg4Nzg1N30.JO79ZdO5wEeNU7bjDKDqTEqB6ELySj_sYp-OLZlXGRw
 
 ### Get Inventory Movement History
-GET http://localhost:8080/api/v1/inventory/movement-history/35b7886d-7702-4343-8ced-6e2d90ed4b70?page=0&size=10
+GET http://localhost:8080/api/v1/inventory/movement-history/b4e006a2-442d-46b7-817a-accf29caad87?page=0&size=10
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJhc2xpZGRpbm93dkBnbWFpbC5jb20iLCJpYXQiOjE3NDc4MDE0NTcsImV4cCI6MTc0Nzg4Nzg1N30.JO79ZdO5wEeNU7bjDKDqTEqB6ELySj_sYp-OLZlXGRw
 
 ### Update Inventory Quantity
 PUT http://localhost:8080/api/v1/inventory/update-quantity/35b7886d-7702-4343-8ced-6e2d90ed4b70?newQuantity=50&movementType=IN

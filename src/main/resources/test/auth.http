@@ -4,6 +4,53 @@ Content-Type: application/json
 
 {
   "fullName": "Zohir",
-  "email": "zohircoding@gmail.com",
-  "password": "passsword.com"
+  "email": "whyasliddinoff@gmail.com",
+  "password": "123456"
 }
+
+### verify
+POST localhost:8080/api/v1/auth/verify
+Content-Type: application/json
+
+{
+  "email": "whyasliddinoff@gmail.com",
+    "code": "142035"
+}
+
+### Login
+POST localhost:8080/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "asliddinowv@gmail.com",
+  "password": "newPassword123"
+}
+
+### Request Password Reset
+POST localhost:8080/api/v1/auth/request-password-reset
+Content-Type: application/json
+
+{
+    "email": "asliddinowv@gmail.com"
+}
+
+### Reset Password
+POST localhost:8080/api/v1/auth/reset-password
+Content-Type: application/json
+
+{
+  "email": "asliddinowv@gmail.com",
+  "code": "636047",
+  "newPassword": "newPassword123"
+}
+
+### Change Password
+POST localhost:8080/api/v1/auth/changePass
+Content-Type: application/json
+
+{
+  "email": "asliddinowv@gmail.com",
+  "oldPassword": "zohirbek",
+  "newPassword": "newPassword123"
+}
+

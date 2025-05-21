@@ -3,5 +3,7 @@ package com.company.users;
 public enum Role {
     USER,
     ADMIN,
-    SUPPLIER
+    SUPPLIER,
+    STORE_OWNER,
+    STAFF
 }

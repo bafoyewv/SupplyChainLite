@@ -6,6 +6,7 @@ import com.company.inventory.InventoryService;
 import com.company.orderdetails.dto.OrderDetailsCr;
 import com.company.orderdetails.dto.OrderDetailsResp;
 import com.company.orderdetails.dto.OrderSummaryDTO;
+import com.company.orders.OrderStatus;
 import com.company.orders.OrdersEntity;
 import com.company.orders.OrdersRepository;
 import com.company.orders.Status;
@@ -87,104 +88,89 @@ public class OrderDetailsService {
 
     /**
      * Get all pending orders that have not been fulfilled yet
-     * @return List of orders with PENDING status
      */
-    public ResponseEntity<List<OrdersEntity>> getPendingOrders() {
-        List<Status> pendingStatuses = Arrays.asList(Status.PENDING, Status.IN_PROGRESS);
-        List<OrdersEntity> pendingOrders = ordersRepository.findByStatusesAndVisibilityTrue(pendingStatuses);
-        return ResponseEntity.ok(pendingOrders);
+    public List<OrdersEntity> getPendingOrders() {
+        return ordersRepository.findAllByStatusAndVisibilityTrue(OrderStatus.PENDING);
     }
 
     /**
      * Update the status of an order
-     * @param orderId The order ID
-     * @param status The new status
-     * @return The updated order
      */
     @Transactional
-    public ResponseEntity<OrdersEntity> updateOrderStatus(UUID orderId, String status) {
-        OrdersEntity order = ordersRepository.findByIdAndVisibilityTrue(orderId)
-                .orElseThrow(() -> new AppBadRequestException("Order not found"));
-        
+    public OrdersEntity updateOrderStatus(UUID orderId, String status) {
+        var order = ordersRepository.findByIdAndVisibilityTrue(orderId)
+                .orElseThrow(() -> new AppBadRequestException("Order topilmadi!"));
+
+        if (order.getStatus() == Status.CANCELLED) {
+            throw new AppBadRequestException("Bekor qilingan buyurtmani o'zgartirib bo'lmaydi!");
+        }
+
         try {
             Status newStatus = Status.valueOf(status.toUpperCase());
             order.setStatus(newStatus);
-            OrdersEntity savedOrder = ordersRepository.save(order);
-            return ResponseEntity.ok(savedOrder);
+            return ordersRepository.save(order);
         } catch (IllegalArgumentException e) {
-            throw new AppBadRequestException("Invalid status: " + status);
+            throw new AppBadRequestException("Noto'g'ri status: " + status);
         }
     }
 
     /**
-     * Cancel an order and release reserved inventory
-     * @param orderId The order ID to cancel
-     * @return Message indicating success
+     * Cancel an order and return products to inventory
      */
+    @Transactional
+    public void cancelOrder(UUID orderId) {
+        var order = ordersRepository.findByIdAndVisibilityTrue(orderId)
+                .orElseThrow(() -> new AppBadRequestException("Order topilmadi!"));
 
+        if (order.getStatus() == Status.CANCELLED) {
+            throw new AppBadRequestException("Buyurtma allaqachon bekor qilingan!");
+        }
+
+        if (order.getStatus() == Status.DELIVERED) {
+            throw new AppBadRequestException("Yetkazilgan buyurtmani bekor qilib bo'lmaydi!");
+        }
+
+        // Return products to inventory
+        order.getOrderDetailsEntities().forEach(detail -> {
+            var product = detail.getProductEntity();
+            product.setStockQuantity(product.getStockQuantity() + detail.getQuantity());
+            productRepository.save(product);
+        });
+
+        order.setStatus(Status.CANCELLED);
+        ordersRepository.save(order);
+    }
 
     /**
      * Get all orders for a specific customer
-     * @param customerId The customer ID
-     * @return List of orders for the customer
      */
-    public ResponseEntity<List<OrdersEntity>> getOrdersByCustomerId(UUID customerId) {
-        List<OrdersEntity> customerOrders = ordersRepository.findByUserIdAndVisibilityTrue(customerId);
-        return ResponseEntity.ok(customerOrders);
+    public List<OrdersEntity> getOrdersByCustomerId(UUID customerId) {
+        return ordersRepository.findAllByUserIdAndVisibilityTrue(customerId);
     }
 
     /**
      * Calculate the total price of an order
-     * @param orderId The order ID
-     * @return The total price of the order
      */
-    public ResponseEntity<BigDecimal> calculateTotalOrderPrice(UUID orderId) {
-        // Check if order exists
-        ordersRepository.findByIdAndVisibilityTrue(orderId)
-                .orElseThrow(() -> new AppBadRequestException("Order not found"));
-        
-        BigDecimal totalPrice = orderDetailsRepository.calculateTotalOrderPrice(orderId);
-        return ResponseEntity.ok(totalPrice != null ? totalPrice : BigDecimal.ZERO);
+    public BigDecimal calculateTotalOrderPrice(UUID orderId) {
+        var order = ordersRepository.findByIdAndVisibilityTrue(orderId)
+                .orElseThrow(() -> new AppBadRequestException("Order topilmadi!"));
+
+        return order.getOrderDetailsEntities().stream()
+                .map(detail -> detail.getPrice().multiply(BigDecimal.valueOf(detail.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     /**
      * Get order summary within a date range
-     * @param fromDate Start date
-     * @param toDate End date
-     * @return Summary of orders within the date range
      */
-    public ResponseEntity<OrderSummaryDTO> getOrderSummaryByDateRange(LocalDate fromDate, LocalDate toDate) {
-        if (fromDate.isAfter(toDate)) {
-            throw new AppBadRequestException("From date must be before to date");
+    public Map<LocalDate, List<OrdersEntity>> getOrderSummaryByDateRange(LocalDate from, LocalDate to) {
+        if (from.isAfter(to)) {
+            throw new AppBadRequestException("Boshlang'ich sana tugash sanasidan keyin bo'lmasligi kerak!");
         }
-        
-        List<OrderDetailsEntity> orderDetails = orderDetailsRepository.findByDateRangeAndVisibilityTrue(fromDate, toDate);
-        
-        // Calculate total orders
-        Set<UUID> uniqueOrderIds = orderDetails.stream()
-                .map(OrderDetailsEntity::getOrderId)
-                .collect(Collectors.toSet());
-        
-        // Calculate total revenue
-        BigDecimal totalRevenue = orderDetails.stream()
-                .map(detail -> detail.getPrice().multiply(BigDecimal.valueOf(detail.getQuantity())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        
-        // Calculate total items sold
-        int totalItemsSold = orderDetails.stream()
-                .mapToInt(OrderDetailsEntity::getQuantity)
-                .sum();
-        
-        // Create summary
-        OrderSummaryDTO summary = OrderSummaryDTO.builder()
-                .fromDate(fromDate)
-                .toDate(toDate)
-                .totalOrders(uniqueOrderIds.size())
-                .totalRevenue(totalRevenue)
-                .totalItemsSold(totalItemsSold)
-                .build();
-        
-        return ResponseEntity.ok(summary);
+
+        var orders = ordersRepository.findAllByOrderDateBetweenAndVisibilityTrue(from, to);
+        return orders.stream()
+                .collect(Collectors.groupingBy(OrdersEntity::getOrderDate));
     }
 
     private OrderDetailsResp toDTO(OrderDetailsEntity orderDetailsEntity) {

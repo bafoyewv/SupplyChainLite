@@ -1,23 +1,27 @@
-### Create Product
 POST http://localhost:8080/api/v1/product
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJhc2xpZGRpbm93dkBnbWFpbC5jb20iLCJpYXQiOjE3NDc4MDE0NTcsImV4cCI6MTc0Nzg4Nzg1N30.JO79ZdO5wEeNU7bjDKDqTEqB6ELySj_sYp-OLZlXGRw
 Content-Type: application/json
 
 {
-  "name": "Tlfoncha",
-  "price": 200,
-  "description": "o'zim 7 yil ishlatganman zo'r ishlaydi",
-  "stockQuantity": 1,
-  "supplierId": "1e1d2591-8914-4976-a608-123dbdfac2df"
+  "name": "Product Name",
+  "description": "Product Description",
+  "price": 100.00,
+  "stockQuantity": 50,
+  "category": "Category",
+  "supplierId": "c0599e0f-eaa9-47c5-83c6-c1cf4795122f"
 }
 
 ### Get Product by ID
-GET http://localhost:8080/api/v1/product/e6d919f8-612a-4062-a309-e7cf3f1b01b6
+GET http://localhost:8080/api/v1/product/8e22942b-7770-4da4-88ff-968563fd60af
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJhc2xpZGRpbm93dkBnbWFpbC5jb20iLCJpYXQiOjE3NDc4MDE0NTcsImV4cCI6MTc0Nzg4Nzg1N30.JO79ZdO5wEeNU7bjDKDqTEqB6ELySj_sYp-OLZlXGRw
 
 ### Get All Products
 GET http://localhost:8080/api/v1/product?page=0&size=10
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJhc2xpZGRpbm93dkBnbWFpbC5jb20iLCJpYXQiOjE3NDc4MDE0NTcsImV4cCI6MTc0Nzg4Nzg1N30.JO79ZdO5wEeNU7bjDKDqTEqB6ELySj_sYp-OLZlXGRw
 
 ### Update Product
-PUT http://localhost:8080/api/v1/product/e6d919f8-612a-4062-a309-e7cf3f1b01b6
+PUT http://localhost:8080/api/v1/product/8e22942b-7770-4da4-88ff-968563fd60af
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJhc2xpZGRpbm93dkBnbWFpbC5jb20iLCJpYXQiOjE3NDc4MDE0NTcsImV4cCI6MTc0Nzg4Nzg1N30.JO79ZdO5wEeNU7bjDKDqTEqB6ELySj_sYp-OLZlXGRw
 Content-Type: application/json
 
 {
@@ -25,14 +29,17 @@ Content-Type: application/json
   "price": 149.99,
   "description": "Updated Product Description",
   "stockQuantity": 150,
-  "supplierId": "00675f4c-683d-41ca-8e6d-8033d6ec2f82"
+  "supplierId": "c0599e0f-eaa9-47c5-83c6-c1cf4795122f",
+    "category": "Updated Category"
 }
 
 ### Delete Product
-DELETE http://localhost:8080/api/v1/product/e6d919f8-612a-4062-a309-e7cf3f1b01b6
+DELETE http://localhost:8080/api/v1/product/8e22942b-7770-4da4-88ff-968563fd60af
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJhc2xpZGRpbm93dkBnbWFpbC5jb20iLCJpYXQiOjE3NDc4MDE0NTcsImV4cCI6MTc0Nzg4Nzg1N30.JO79ZdO5wEeNU7bjDKDqTEqB6ELySj_sYp-OLZlXGRw
 
 ### Get Product by Name
-GET http://localhost:8080/api/v1/product/search/
+GET http://localhost:8080/api/v1/product/search/Updated Product
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJhc2xpZGRpbm93dkBnbWFpbC5jb20iLCJpYXQiOjE3NDc4MDE0NTcsImV4cCI6MTc0Nzg4Nzg1N30.JO79ZdO5wEeNU7bjDKDqTEqB6ELySj_sYp-OLZlXGRw
 
 ### Search Products by Name
 GET http://localhost:8080/api/v1/product/search/Test Product?page=0&size=10
@@ -42,4 +49,5 @@ GET http://localhost:8080/api/v1/product/get-low-stock-products?threshold=10&pag
 
 
 ### Get Products by Supplier ID
-GET http://localhost:8080/api/v1/product/get-products-by-supplier/00675f4c-683d-41ca-8e6d-8033d6ec2f82?page=0&size=10
+GET http://localhost:8080/api/v1/product/get-products-by-supplier/c0599e0f-eaa9-47c5-83c6-c1cf4795122f?page=0&size=10
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJhc2xpZGRpbm93dkBnbWFpbC5jb20iLCJpYXQiOjE3NDc4MDE0NTcsImV4cCI6MTc0Nzg4Nzg1N30.JO79ZdO5wEeNU7bjDKDqTEqB6ELySj_sYp-OLZlXGRw

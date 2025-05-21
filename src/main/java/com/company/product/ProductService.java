@@ -83,7 +83,7 @@ public class ProductService {
 
     public ResponseEntity<PageImpl<ProductResp>> searchProducts(String name, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("name"));
-        List<ProductResp> list = productRepository.findByNameContainingIgnoreCaseAndVisibilityTrue(name, pageable)
+        List<ProductResp> list = productRepository.searchProducts(name, pageable)
                 .stream()
                 .map(this::toDTO)
                 .toList();
@@ -100,6 +100,10 @@ public class ProductService {
     }
 
     public ResponseEntity<PageImpl<ProductResp>> getProductsBySupplier(UUID supplierId, int page, int size) {
+        // Check if supplier exists
+        supplierRepository.findByIdAndVisibilityTrue(supplierId)
+                .orElseThrow(() -> new AppBadRequestException("Supplier not found"));
+
         Pageable pageable = PageRequest.of(page, size, Sort.by("name"));
         List<ProductResp> list = productRepository.findBySupplierIdAndVisibilityTrue(supplierId, pageable)
                 .stream()
@@ -115,7 +119,7 @@ public class ProductService {
                 .price(productEntity.getPrice())
                 .description(productEntity.getDescription())
                 .stockQuantity(productEntity.getStockQuantity())
-                .supplierId(productEntity.getSupplierId())
+                .supplierId(productEntity.getSupplierEntity().getId())
                 .category(productEntity.getCategory())
                 .build();
     }

@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Repository
 public interface OrdersRepository extends JpaRepository<OrdersEntity, UUID> {
     Optional<OrdersEntity> findByIdAndVisibilityTrue(UUID id);
 
@@ -26,4 +28,10 @@ public interface OrdersRepository extends JpaRepository<OrdersEntity, UUID> {
     
     @Query("SELECT o FROM OrdersEntity o WHERE o.status IN :statuses AND o.visibility = true")
     List<OrdersEntity> findByStatusesAndVisibilityTrue(@Param("statuses") Collection<Status> statuses);
+
+    List<OrdersEntity> findAllByStatusAndVisibilityTrue(OrderStatus status);
+    
+    List<OrdersEntity> findAllByUserIdAndVisibilityTrue(UUID userId);
+    
+    List<OrdersEntity> findAllByOrderDateBetweenAndVisibilityTrue(LocalDate from, LocalDate to);
 }

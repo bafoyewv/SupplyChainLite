@@ -4,6 +4,7 @@ import com.company.orderdetails.dto.OrderDetailsCr;
 import com.company.orderdetails.dto.OrderDetailsResp;
 import com.company.orderdetails.dto.OrderSummaryDTO;
 import com.company.orders.OrdersEntity;
+import com.company.orders.Status;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -55,51 +57,55 @@ public class OrderDetailsController {
     /**
      * Get all pending orders
      */
-    @GetMapping("/pending-orders")
+    @GetMapping("/pending")
     public ResponseEntity<List<OrdersEntity>> getPendingOrders() {
-        return orderDetailsService.getPendingOrders();
+        return ResponseEntity.ok(orderDetailsService.getPendingOrders());
     }
     
     /**
      * Update the status of an order
      */
-    @PutMapping("/orders/{orderId}/status")
+    @PutMapping("/{orderId}/status")
     public ResponseEntity<OrdersEntity> updateOrderStatus(
             @PathVariable UUID orderId,
             @RequestParam String status
     ) {
-        return orderDetailsService.updateOrderStatus(orderId, status);
+        return ResponseEntity.ok(orderDetailsService.updateOrderStatus(orderId, status));
     }
     
     /**
      * Cancel an order
      */
-    
+    @PostMapping("/{orderId}/cancel")
+    public ResponseEntity<Void> cancelOrder(@PathVariable UUID orderId) {
+        orderDetailsService.cancelOrder(orderId);
+        return ResponseEntity.ok().build();
+    }
     
     /**
      * Get all orders for a specific customer
      */
     @GetMapping("/customer/{customerId}")
     public ResponseEntity<List<OrdersEntity>> getOrdersByCustomerId(@PathVariable UUID customerId) {
-        return orderDetailsService.getOrdersByCustomerId(customerId);
+        return ResponseEntity.ok(orderDetailsService.getOrdersByCustomerId(customerId));
     }
     
     /**
      * Calculate the total price of an order
      */
-    @GetMapping("/orders/{orderId}/total")
+    @GetMapping("/{orderId}/total")
     public ResponseEntity<BigDecimal> calculateTotalOrderPrice(@PathVariable UUID orderId) {
-        return orderDetailsService.calculateTotalOrderPrice(orderId);
+        return ResponseEntity.ok(orderDetailsService.calculateTotalOrderPrice(orderId));
     }
     
     /**
      * Get order summary within a date range
      */
     @GetMapping("/summary")
-    public ResponseEntity<OrderSummaryDTO> getOrderSummaryByDateRange(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to
+    public ResponseEntity<Map<LocalDate, List<OrdersEntity>>> getOrderSummaryByDateRange(
+            @RequestParam LocalDate from,
+            @RequestParam LocalDate to
     ) {
-        return orderDetailsService.getOrderSummaryByDateRange(from, to);
+        return ResponseEntity.ok(orderDetailsService.getOrderSummaryByDateRange(from, to));
     }
 }

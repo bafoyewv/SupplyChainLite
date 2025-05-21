@@ -16,6 +16,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final UserRepository userRepository;
 
     @PostMapping("/login")
     public ResponseEntity<UserResp> login(@RequestBody LoginDTO loginDTO) {
@@ -58,5 +59,29 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> delete(@PathVariable UUID id) {
         return userService.delete(id);
+    }
+
+    @PutMapping("/update-role")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UserResp> updateRole(@RequestBody UserCr userCr) {
+        return userService.updateRoleToAdmin(userCr, userCr.getEmail());
+    }
+
+    @PutMapping("/update-role-supplier")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UserResp> updateRoleToSupplier(@RequestBody UserCr userCr) {
+        return userService.updateRoleToSupplier(userCr);
+    }
+
+    @PutMapping("/update-role-store-owner")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UserResp> updateRoleToStoreOwner(@RequestBody UserCr userCr) {
+        return userService.updateRoleToStoreOwner(userCr);
+    }
+
+    @DeleteMapping("/reset")
+    public ResponseEntity<String> resetDatabase() {
+        userRepository.deleteAllUsers();
+        return ResponseEntity.ok("Database reset successfully");
     }
 }

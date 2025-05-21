@@ -30,6 +30,10 @@ public class UserService {
         if (optionalUser.isPresent()) {
             throw new AppBadRequestException("User Already Exists!!!");
         }
+
+        // Check if this is the first user
+        boolean isFirstUser = userRepository.count() == 0;
+        
         UserEntity saved = userRepository.save(UserEntity
                 .builder()
                 .fullName(userCr.getFullName())
@@ -37,13 +41,11 @@ public class UserService {
                 .password(userCr.getPassword())
                 .createdAt(LocalDateTime.now())
                 .visibility(true)
-                .role(Role.USER)
+                .role(isFirstUser ? Role.ADMIN : Role.USER)
+                .status(UserStatus.VERIFIED)
                 .build());
 
-        return ResponseEntity.ok(
-                toDTO(saved)
-        );
-
+        return ResponseEntity.ok(toDTO(saved));
     }
 
     public ResponseEntity<UserResp> getProfile() {
@@ -128,6 +130,30 @@ public class UserService {
         }
 
         return ResponseEntity.ok(toDTO(optionalUser.get()));
+    }
+
+    public ResponseEntity<UserResp> updateRoleToSupplier(UserCr userCr) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        UserEntity userEntity = userRepository.findByEmailAndVisibilityTrue(email)
+                .orElseThrow(ItemNotFoundException::new);
+
+        userEntity.setRole(Role.SUPPLIER);
+        UserEntity saved = userRepository.save(userEntity);
+        return ResponseEntity.ok(toDTO(saved));
+    }
+
+    public ResponseEntity<UserResp> updateRoleToStoreOwner(UserCr userCr) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        UserEntity userEntity = userRepository.findByEmailAndVisibilityTrue(email)
+                .orElseThrow(ItemNotFoundException::new);
+
+        userEntity.setRole(Role.STORE_OWNER);
+        UserEntity saved = userRepository.save(userEntity);
+        return ResponseEntity.ok(toDTO(saved));
     }
 
     private UserResp toDTO(UserEntity userEntity) {

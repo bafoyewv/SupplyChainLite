@@ -1,5 +1,5 @@
-### CREATE SUPPLIER
-POST localhost:8080/api/v1/supply/add
+POST http://localhost:8080/api/v1/supply/add
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhc2xpZGRpbm93dkBnbWFpbC5jb20iLCJpYXQiOjE3NDc4MDA4MTcsImV4cCI6MTc0Nzg4NzIxN30.8sCSudyXwGZ8RnBTnZn5HZ-8NMsFVSwX0xzSzkFu5os
 Content-Type: application/json
 
 {
@@ -9,20 +9,24 @@ Content-Type: application/json
 }
 
 ### GET BY ID
-GET localhost:8080/api/v1/supply/get-by-id/9de06c73-dc35-4261-8843-9ba1ad3a5b5f
+GET http://localhost:8080/api/v1/supply/get-by-id/c0599e0f-eaa9-47c5-83c6-c1cf4795122f
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhc2xpZGRpbm93dkBnbWFpbC5jb20iLCJpYXQiOjE3NDc4MDA4MTcsImV4cCI6MTc0Nzg4NzIxN30.8sCSudyXwGZ8RnBTnZn5HZ-8NMsFVSwX0xzSzkFu5os
 
 ### GET ALL
 GET localhost:8080/api/v1/supply/get-all
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhc2xpZGRpbm93dkBnbWFpbC5jb20iLCJpYXQiOjE3NDc4MDA4MTcsImV4cCI6MTc0Nzg4NzIxN30.8sCSudyXwGZ8RnBTnZn5HZ-8NMsFVSwX0xzSzkFu5os
 
-### UPDATE
-PUT localhost:8080/api/v1/supply/update/9de06c73-dc35-4261-8843-9ba1ad3a5b5f
+#### update
+PUT http://localhost:8080/api/v1/supply/update/c0599e0f-eaa9-47c5-83c6-c1cf4795122f
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJhc2xpZGRpbm93dkBnbWFpbC5jb20iLCJpYXQiOjE3NDc4MDE0NTcsImV4cCI6MTc0Nzg4Nzg1N30.JO79ZdO5wEeNU7bjDKDqTEqB6ELySj_sYp-OLZlXGRw
 Content-Type: application/json
 
 {
-"name": "Yoq",
+  "name": "Yoq",
   "address": "No Address",
   "contact_info": "no info"
 }
 
 ### DELETE
-DELETE localhost:8080/api/v1/supply/delete/00675f4c-683d-41ca-8e6d-8033d6ec2f82
+DELETE http://localhost:8080/api/v1/supply/delete/c0599e0f-eaa9-47c5-83c6-c1cf4795122f
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJhc2xpZGRpbm93dkBnbWFpbC5jb20iLCJpYXQiOjE3NDc4MDE0NTcsImV4cCI6MTc0Nzg4Nzg1N30.JO79ZdO5wEeNU7bjDKDqTEqB6ELySj_sYp-OLZlXGRw

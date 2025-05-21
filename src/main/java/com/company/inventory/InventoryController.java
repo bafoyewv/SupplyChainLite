@@ -58,7 +58,7 @@ public class InventoryController {
         return inventoryService.getInventoryAlerts(threshold, page, size);
     }
 
-    @GetMapping("/{inventoryId}/movement-history")
+    @GetMapping("/movement-history/{inventoryId}")
     public ResponseEntity<Page<InventoryMovementHistoryResp>> getInventoryMovementHistory(
             @PathVariable UUID inventoryId,
             @RequestParam(defaultValue = "0") int page,

@@ -41,7 +41,8 @@ public class SupplierService {
     }
 
     public ResponseEntity<SupplierResp> getbyId(UUID id){
-        SupplierEntity supplierEntity = supplierRepository.findById(id).orElseThrow(ItemNotFoundException::new);
+        SupplierEntity supplierEntity = supplierRepository.findByIdAndVisibilityTrue(id)
+                .orElseThrow(ItemNotFoundException::new);
         return ResponseEntity.ok(toDTO(supplierEntity));
     }
 

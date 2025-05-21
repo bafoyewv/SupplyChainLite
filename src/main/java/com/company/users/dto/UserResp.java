@@ -1,6 +1,7 @@
 package com.company.users.dto;
 
 import com.company.users.Role;
+import com.company.users.UserStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,5 +21,5 @@ public class UserResp {
     private String email;
     private LocalDateTime creationDate = LocalDateTime.now();
     private Role role;
-
+    private UserStatus status;
 }

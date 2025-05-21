@@ -150,7 +150,7 @@ public class InventoryService {
                 .id(inventoryEntity.getId())
                 .quantityInStock(inventoryEntity.getQuantityInStock())
                 .lastRestockDate(inventoryEntity.getLastRestockDate())
-                .productId(inventoryEntity.getProductId())
+                .productId(inventoryEntity.getProductEntity().getId())
                 .build();
     }
 
